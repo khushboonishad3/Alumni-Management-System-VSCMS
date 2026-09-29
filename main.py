@@ -23,8 +23,11 @@ from app.routers import (
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Ensure tables exist and default seed data is ready
-    Base.metadata.create_all(bind=engine)
-    seed_database()
+    try:
+        Base.metadata.create_all(bind=engine)
+        seed_database()
+    except Exception as e:
+        print(f"[STARTUP DB INITIALIZATION WARNING] {e}")
     yield
 
 app = FastAPI(
@@ -43,9 +46,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount Static & Media files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/media", StaticFiles(directory="media"), name="media")
+# Mount Static & Media files safely using resolved paths
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+static_dir = os.path.join(BASE_PATH, "static")
+media_dir = os.path.join(BASE_PATH, "media")
+
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+if os.path.exists(media_dir):
+    app.mount("/media", StaticFiles(directory=media_dir), name="media")
 
 # Include Routers
 app.include_router(auth_router)

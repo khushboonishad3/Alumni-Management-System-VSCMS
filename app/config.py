@@ -20,8 +20,8 @@ class Settings:
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60 * 24))  # 24 hours
     
-    # Media & Storage
-    MEDIA_DIR: Path = BASE_DIR / "media"
+    # Media & Storage (Use /tmp on serverless environments like Vercel)
+    MEDIA_DIR: Path = Path("/tmp/media") if os.getenv("VERCEL") else BASE_DIR / "media"
     AVATARS_DIR: Path = MEDIA_DIR / "avatars"
     RESUMES_DIR: Path = MEDIA_DIR / "resumes"
     RESOURCES_DIR: Path = MEDIA_DIR / "resources"
@@ -42,6 +42,9 @@ class Settings:
 
 settings = Settings()
 
-# Ensure directories exist
+# Ensure directories exist safely without failing on read-only environments
 for folder in [settings.MEDIA_DIR, settings.AVATARS_DIR, settings.RESUMES_DIR, settings.RESOURCES_DIR, settings.PROJECT_FILES_DIR]:
-    folder.mkdir(parents=True, exist_ok=True)
+    try:
+        folder.mkdir(parents=True, exist_ok=True)
+    except (OSError, PermissionError):
+        pass

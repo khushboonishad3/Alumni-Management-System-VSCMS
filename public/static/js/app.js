@@ -108,6 +108,27 @@ const App = {
         if (isAdmin) dropdownAdminItem.classList.remove("d-none");
         else dropdownAdminItem.classList.add("d-none");
       }
+
+      // Profile access: strictly for Student and Alumni only!
+      const topProfileBtn = document.getElementById("top-profile-btn");
+      const isStudentOrAlumni = ["student", "alumni"].includes(this.currentUser.role);
+      if (topProfileBtn) {
+        if (isStudentOrAlumni) topProfileBtn.classList.remove("d-none");
+        else topProfileBtn.classList.add("d-none");
+      }
+
+      // Posting placement opportunities & hosting events: disallowed for Student login only!
+      const isStudent = this.currentUser.role === "student";
+      const postJobBtn = document.getElementById("btn-post-job-trigger");
+      if (postJobBtn) {
+        if (isStudent) postJobBtn.classList.add("d-none");
+        else postJobBtn.classList.remove("d-none");
+      }
+      const hostEventBtn = document.getElementById("btn-host-event-trigger");
+      if (hostEventBtn) {
+        if (isStudent) hostEventBtn.classList.add("d-none");
+        else hostEventBtn.classList.remove("d-none");
+      }
     } else {
       body.classList.add("user-logged-out");
       body.classList.remove("user-logged-in");
@@ -118,6 +139,8 @@ const App = {
       if (adminNav) adminNav.classList.add("d-none");
       if (topAuthLoggedOut) topAuthLoggedOut.classList.add("d-none");
       if (topAuthLoggedIn) topAuthLoggedIn.classList.add("d-none");
+      const topProfileBtn = document.getElementById("top-profile-btn");
+      if (topProfileBtn) topProfileBtn.classList.add("d-none");
     }
   },
 
@@ -260,6 +283,11 @@ const App = {
           this.renderMessages(param);
           break;
         case "profile":
+          if (this.currentUser && !["student", "alumni"].includes(this.currentUser.role)) {
+            const redirectHash = ["admin", "super_admin"].includes(this.currentUser.role) ? "#admin" : "#home";
+            window.location.hash = redirectHash;
+            return;
+          }
           this.renderProfile();
           break;
         case "admin":
@@ -688,6 +716,13 @@ const App = {
   // ================= JOBS & REFERRALS =================
 
   async renderJobs() {
+    const isStudent = this.currentUser && this.currentUser.role === "student";
+    const postJobBtn = document.getElementById("btn-post-job-trigger");
+    if (postJobBtn) {
+      if (isStudent) postJobBtn.classList.add("d-none");
+      else postJobBtn.classList.remove("d-none");
+    }
+
     const container = document.getElementById("jobs-grid");
     if (!container) return;
 
@@ -1379,6 +1414,13 @@ const App = {
   // ================= EVENTS & HACKATHONS =================
 
   async renderEvents() {
+    const isStudent = this.currentUser && this.currentUser.role === "student";
+    const hostEventBtn = document.getElementById("btn-host-event-trigger");
+    if (hostEventBtn) {
+      if (isStudent) hostEventBtn.classList.add("d-none");
+      else hostEventBtn.classList.remove("d-none");
+    }
+
     const container = document.getElementById("events-grid");
     if (!container) return;
 
@@ -1691,6 +1733,8 @@ const App = {
 
   checkAndShowProfilePrompt() {
     if (!this.currentUser) return;
+    // Strictly for student and alumni only! Remove complete profile prompt for superadmin, admin, faculty
+    if (!["student", "alumni"].includes(this.currentUser.role)) return;
     if (sessionStorage.getItem("vscms_profile_alert_dismissed") === "true") return;
 
     const { percent, missingItems } = this.calculateProfileCompleteness(this.currentUser);
@@ -1743,6 +1787,13 @@ const App = {
 
   async renderProfile() {
     if (!this.requireLogin()) return;
+    // Profile is only accessible for student and alumni accounts
+    if (this.currentUser && !["student", "alumni"].includes(this.currentUser.role)) {
+      this.showToast("Profile management is only available for student and alumni accounts.", "info");
+      const redirectHash = ["admin", "super_admin"].includes(this.currentUser.role) ? "#admin" : "#home";
+      window.location.hash = redirectHash;
+      return;
+    }
     const container = document.getElementById("profile-form-container");
     if (!container) return;
 

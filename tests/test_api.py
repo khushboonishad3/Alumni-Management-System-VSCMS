@@ -269,3 +269,31 @@ def test_forgot_password_flow():
     data = res.json()
     assert "CMS AlumniConnect" in data["message"]
     assert data["simulated_reset_code"] == "CMS-2025"
+
+def test_student_restricted_from_posting_placements_and_events():
+    # Student login
+    login_stu = client.post("/api/auth/login", json={
+        "email": "aditya.tiwari@cmskanpur.edu.in",
+        "password": "Student@CMS2025"
+    })
+    token_stu = login_stu.json()["access_token"]
+    
+    # 1. Student attempting to post a job opportunity must be denied (403)
+    res_job = client.post("/api/jobs", json={
+        "title": "Unauthorized Student Posted Job",
+        "company": "Tech Corp",
+        "job_type": "full_time",
+        "location_type": "remote",
+        "required_skills": "Python, SQL"
+    }, headers={"Authorization": f"Bearer {token_stu}"})
+    assert res_job.status_code == 403
+
+    # 2. Student attempting to host an event / hackathon must be denied (403)
+    res_event = client.post("/api/events", json={
+        "title": "Unauthorized Student Hosted Hackathon",
+        "event_type": "hackathon",
+        "description": "Student hosted test event",
+        "start_time": "2026-10-15T10:00:00",
+        "end_time": "2026-10-15T18:00:00"
+    }, headers={"Authorization": f"Bearer {token_stu}"})
+    assert res_event.status_code == 403

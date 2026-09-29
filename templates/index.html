@@ -69,7 +69,7 @@
           <div id="top-auth-logged-in" class="d-none d-flex align-items-center gap-2">
             <span class="badge bg-warning text-dark fw-bold px-2 py-1" id="top-user-role-badge">ALUMNI</span>
             <span class="text-white small fw-bold text-truncate" style="max-width: 130px;" id="top-user-name">User</span>
-            <a href="#profile" data-view="profile" class="btn btn-outline-light py-0 px-2 fw-semibold small text-decoration-none" style="font-size: 0.72rem;">Profile</a>
+            <a href="#profile" id="top-profile-btn" data-view="profile" class="btn btn-outline-light py-0 px-2 fw-semibold small text-decoration-none" style="font-size: 0.72rem;">Profile</a>
             <button class="btn btn-danger py-0 px-2 fw-semibold small" onclick="App.logout()" style="font-size: 0.72rem;">Sign Out</button>
           </div>
         </div>
@@ -605,7 +605,7 @@
           <p class="text-muted small mb-0">Connect directly with CMS alumni hiring managers and employees offering internal employee referrals.</p>
         </div>
         <div class="d-flex gap-2">
-          <button class="btn btn-primary-cms btn-sm" onclick="App.openCreateJobModal()">
+          <button id="btn-post-job-trigger" class="btn btn-primary-cms btn-sm" onclick="App.openCreateJobModal()">
             <i class="bi bi-plus-circle me-1"></i> Post Opportunity
           </button>
         </div>
@@ -716,7 +716,7 @@
           <p class="text-muted small mb-0">Participate as a student hacker, judge, speaker, or mentor in CMS technical events.</p>
         </div>
         <div class="d-flex gap-2">
-          <button class="btn btn-primary-cms btn-sm" onclick="App.openCreateEventModal()">
+          <button id="btn-host-event-trigger" class="btn btn-primary-cms btn-sm" onclick="App.openCreateEventModal()">
             <i class="bi bi-calendar-plus me-1"></i> Host Event / Hackathon
           </button>
         </div>

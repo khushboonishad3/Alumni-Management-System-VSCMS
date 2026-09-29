@@ -56,6 +56,19 @@ if os.path.exists(static_dir):
 if os.path.exists(media_dir):
     app.mount("/media", StaticFiles(directory=media_dir), name="media")
 
+# Vercel Serverless Path Unmasking Middleware
+@app.middleware("http")
+async def vercel_routing_middleware(request: Request, call_next):
+    raw_path = request.scope.get("path", "")
+    if raw_path in ["/main.py", "/main", "/api/index", "/api/index.py"] or raw_path.startswith(("/main.py/", "/api/index/")):
+        matched = request.headers.get("x-matched-path") or request.headers.get("x-forwarded-uri")
+        if matched and not matched.startswith(("/main.py", "/api/index")):
+            clean_path = matched.split("?")[0]
+            request.scope["path"] = clean_path if clean_path else "/"
+        else:
+            request.scope["path"] = "/"
+    return await call_next(request)
+
 # Include Routers
 app.include_router(auth_router)
 app.include_router(users_router)
@@ -71,6 +84,8 @@ app.include_router(search_router)
 # Frontend UI Root & Auth Route
 @app.get("/", response_class=HTMLResponse)
 @app.get("/auth", response_class=HTMLResponse)
+@app.get("/main.py", response_class=HTMLResponse)
+@app.get("/main", response_class=HTMLResponse)
 async def serve_index():
     index_path = os.path.join(os.path.dirname(__file__), "templates", "index.html")
     if os.path.exists(index_path):

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: cms_alumni_app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=production
+      - DEBUG=False
+      - DATABASE_URL=postgresql://cms_user:cms_password_2025@db:5432/cms_alumni_db
+      - SECRET_KEY=cms-kanpur-bca-mca-super-secret-jwt-key-2025-secure-hash
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+    volumes:
+      - media_storage:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: cms_alumni_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cms_user
+      POSTGRES_PASSWORD: cms_password_2025
+      POSTGRES_DB: cms_alumni_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cms_user -d cms_alumni_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  media_storage:

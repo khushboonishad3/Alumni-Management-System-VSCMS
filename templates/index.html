@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMS AlumniConnect | BCA & MCA Technical Networking Platform - CMS Kanpur</title>
+  <meta name="description" content="Official technical alumni networking, mentorship, referral, and placement portal for BCA and MCA students and graduates of Dr. Virendra Swarup College of Management Studies (CMS Kanpur).">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css?v=2.5">
+<body class="user-logged-out">
+
+  <!-- VSCMS Official Top Header Bar -->
+  <div class="vscms-top-header">
+    <div class="container-fluid px-lg-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <!-- Left Contact Info & College URL -->
+      <div class="d-flex flex-wrap align-items-center gap-3 small">
+        <span class="text-white">
+          <i class="bi bi-envelope-fill me-1 text-light"></i>
+          <a href="mailto:cmskanpur@hotmail.com">cmskanpur@hotmail.com</a>
+        </span>
+        <span class="d-none d-md-inline text-white">
+          <i class="bi bi-geo-alt-fill me-1 text-light"></i>
+          Centrally Located At McRobert Ganj, Kanpur
+        </span>
+        <span>
+          <i class="bi bi-globe me-1 text-info"></i>
+          <a href="https://vscmskanpur.com/" target="_blank" rel="noopener noreferrer" class="fw-bold text-white">www.vscmskanpur.com</a>
+        </span>
+      </div>
+
+      <!-- Right Social Media Icons & Phone Numbers -->
+      <div class="d-flex align-items-center gap-1 ms-auto">
+        <a href="https://facebook.com/vscmskanpur" target="_blank" rel="noopener noreferrer" class="top-social-icon" title="Facebook"><i class="bi bi-facebook"></i></a>
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="top-social-icon" title="YouTube"><i class="bi bi-youtube"></i></a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="top-social-icon" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="top-social-icon" title="Instagram"><i class="bi bi-instagram"></i></a>
+        <a href="https://wa.me/917570004005" target="_blank" rel="noopener noreferrer" class="top-social-icon" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+
+        <span class="ms-2 small text-nowrap text-white">
+          <i class="bi bi-telephone-fill me-1"></i>
+          <a href="tel:7570004005" class="text-white text-decoration-none">7570004005</a>
+          <i class="bi bi-telephone-fill ms-2 me-1"></i>
+          <a href="tel:8542030533" class="text-white text-decoration-none">8542030533</a>
+        </span>
+
+        <!-- Top Bar Institutional Auth & User Status Quick Access -->
+        <div class="ms-3 ps-3 border-start border-white border-opacity-25 d-flex align-items-center" id="top-auth-container">
+          <!-- Logged Out State -->
+          <div id="top-auth-logged-out" class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-light py-1 px-2 fw-semibold text-white d-flex align-items-center gap-1 shadow-sm" onclick="App.openLoginModal()" style="font-size: 0.75rem; border-color: rgba(255,255,255,0.55);">
+              <i class="bi bi-box-arrow-in-right"></i> Sign In
+            </button>
+            <button class="btn btn-warning py-1 px-2 fw-bold text-dark d-flex align-items-center gap-1 shadow-sm" onclick="App.openRegisterModal()" style="font-size: 0.75rem; background-color: #F59E0B; border: none;">
+              <i class="bi bi-person-plus-fill"></i> Register
+            </button>
+          </div>
+
+          <!-- Logged In State -->
+          <div id="top-auth-logged-in" class="d-none d-flex align-items-center gap-2">
+            <span class="badge bg-warning text-dark fw-bold px-2 py-1" id="top-user-role-badge">ALUMNI</span>
+            <span class="text-white small fw-bold text-truncate" style="max-width: 130px;" id="top-user-name">User</span>
+            <a href="#profile" data-view="profile" class="btn btn-outline-light py-0 px-2 fw-semibold small text-decoration-none" style="font-size: 0.72rem;">Profile</a>
+            <button class="btn btn-danger py-0 px-2 fw-semibold small" onclick="App.logout()" style="font-size: 0.72rem;">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VSCMS Main Navigation Bar -->
+  <nav class="navbar navbar-expand-xl navbar-dark navbar-cms sticky-top p-0">
+    <div class="container-fluid px-lg-4">
+      <a class="navbar-brand d-flex align-items-center gap-2 py-2" href="#home">
+        <img src="/static/img/vscms_logo.png" alt="VSCMS Kanpur Seal" class="vscms-logo-img">
+        <div class="vscms-brand-text">
+          <div class="vscms-sub-title">Dr. Virendra Swarup</div>
+          <div class="vscms-main-title">College of Management Studies(VSCMS)</div>
+          <div class="vscms-code-title">AKTU College Code - 050 • BCA & MCA Alumni Portal</div>
+        </div>
+      </a>
+
+      <button class="navbar-toggler my-2 d-none-auth" type="button" data-bs-toggle="collapse" data-bs-target="#cmsNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse d-none-auth" id="cmsNavbar">
+        <ul class="navbar-nav ms-auto mb-2 mb-xl-0 align-items-xl-center">
+          <li class="nav-item"><a class="nav-link active" data-view="home" href="#home"><i class="bi bi-house-door me-1"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" data-view="alumni" href="#alumni"><i class="bi bi-people me-1"></i> Alumni</a></li>
+          <li class="nav-item"><a class="nav-link" data-view="jobs" href="#jobs" title="Placements & Internal Referrals"><i class="bi bi-briefcase me-1"></i> Placements</a></li>
+          <li class="nav-item"><a class="nav-link" data-view="mentorship" href="#mentorship"><i class="bi bi-person-video3 me-1"></i> Mentorship</a></li>
+          <li class="nav-item"><a class="nav-link" data-view="projects" href="#projects"><i class="bi bi-lightbulb me-1"></i> Projects</a></li>
+          
+          <!-- More Dropdown (Resources & Events) -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              More
+            </a>
+            <ul class="dropdown-menu shadow-lg border-0">
+              <li><a class="dropdown-item py-2" data-view="resources" href="#resources"><i class="bi bi-folder2-open text-primary me-2"></i> Technical Resources</a></li>
+              <li><a class="dropdown-item py-2" data-view="events" href="#events"><i class="bi bi-calendar3 text-danger me-2"></i> Events & Hackathons</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item"><a class="nav-link" data-view="messages" href="#messages"><i class="bi bi-chat-dots me-1"></i> Messages</a></li>
+          
+          <!-- Admin View Link (Restricted to Faculty/Admin) -->
+          <li class="nav-item d-none" id="nav-admin-link">
+            <a class="nav-link text-warning fw-bold" data-view="admin" href="#admin"><i class="bi bi-speedometer2 me-1"></i> Admin</a>
+          </li>
+
+          <!-- Notifications Center Dropdown -->
+          <li class="nav-item dropdown ms-xl-2">
+            <a class="nav-link position-relative px-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
+              <i class="bi bi-bell fs-5"></i>
+              <span id="notification-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="font-size: 0.65rem">0</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end shadow-lg p-0" style="width: 320px; max-height: 420px; overflow-y: auto;">
+              <div class="p-2 border-bottom d-flex justify-content-between align-items-center bg-light">
+                <span class="small fw-bold text-dark">Notifications</span>
+                <button class="btn btn-link btn-xs text-primary text-decoration-none" onclick="App.markAllNotifsRead()">Mark all as read</button>
+              </div>
+              <div id="notifications-list" class="p-1">
+                <div class="p-3 text-center text-muted small">No new notifications.</div>
+              </div>
+            </div>
+          </li>
+
+          <!-- Auth Actions (Logged Out State in Navbar) -->
+          <li class="nav-item ms-xl-2 align-items-center d-flex" id="auth-actions">
+            <div class="d-flex align-items-center gap-2 py-2">
+              <button class="btn btn-sm btn-outline-light text-nowrap fw-bold px-3 py-1 shadow-sm" onclick="App.openLoginModal()" style="font-size: 0.8rem; border-color: rgba(255,255,255,0.75);">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+              </button>
+              <button class="btn btn-sm btn-warning text-dark text-nowrap fw-bold px-3 py-1 shadow-sm" onclick="App.openRegisterModal()" style="font-size: 0.8rem; background-color: #F59E0B; border: none;">
+                <i class="bi bi-person-plus-fill me-1"></i> Register
+              </button>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= VIEW CONTAINERS ================= -->
+
+  <!-- 0. FIRST PAGE: INSTITUTIONAL AUTH GATEWAY (LOGIN & REGISTER) -->
+  <section id="view-auth" class="view-section">
+    <div class="auth-hero-container py-5" style="background-color: #FFFFFF;">
+      <div class="container py-2">
+        
+        <!-- Privacy / Access Notice -->
+        <div class="row justify-content-center mb-4">
+          <div class="col-12" style="max-width: 820px;">
+            <div class="auth-notice-box d-flex align-items-start gap-3 shadow-sm">
+              <i class="bi bi-shield-check fs-4 text-warning-emphasis flex-shrink-0 mt-1"></i>
+              <div>
+                <strong class="d-block text-dark fw-bold mb-1" style="font-size: 0.92rem;">Secure Alumni Portal</strong>
+                <p class="mb-0 small" style="color: #4B5563; line-height: 1.5;">
+                  In compliance with institutional data privacy policies, access to alumni directories, career referrals, and mentorship programs is strictly restricted. Please log in or register for an authenticated account to view these resources.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Authentication Card -->
+        <div class="row justify-content-center">
+          <div class="col-12" style="max-width: 820px;">
+            <div class="vscms-auth-card shadow-sm border">
+
+              <div class="card-body p-4 p-md-5">
+                
+                <!-- TAB 1: SIGN IN PANE -->
+                <div id="auth-pane-login" class="auth-tab-pane">
+                  <div class="mb-4 text-center">
+                    <h3 class="fw-bold text-dark mb-1" style="font-size: 1.55rem; letter-spacing: -0.3px;">Welcome Back</h3>
+                    <p class="text-secondary small mb-0">Sign in with your VSCMS credentials to access the alumni network.</p>
+                  </div>
+
+                  <!-- Polished In-Card Alert Box -->
+                  <div id="auth-login-alert" class="alert d-none mb-4 py-2 px-3 align-items-center gap-2" role="alert" style="border-radius: 8px; font-size: 0.88rem;">
+                    <i id="auth-login-alert-icon" class="bi bi-exclamation-circle-fill fs-5 flex-shrink-0"></i>
+                    <span id="auth-login-alert-msg" class="flex-grow-1"></span>
+                    <button type="button" class="btn-close btn-sm ms-auto" aria-label="Close" onclick="App.hideAuthAlert()"></button>
+                  </div>
+
+                  <form id="form-vscms-login" onsubmit="App.submitPageLogin(event)">
+                    <!-- Identifier (Email / Username / Roll No / Enrollment No) -->
+                    <div class="mb-3">
+                      <label for="auth-login-identifier" class="form-label small fw-bold text-dark mb-1">
+                        Email Address / Username <span class="text-danger">*</span>
+                      </label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light text-secondary border-end-0 px-3">
+                          <i class="bi bi-person-fill fs-6"></i>
+                        </span>
+                        <input type="text" id="auth-login-identifier" class="form-control border-start-0 py-2" placeholder="Enter your registered email or username" required autocomplete="username">
+                      </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                      <label for="auth-login-password" class="form-label small fw-bold text-dark mb-1">
+                        Password <span class="text-danger">*</span>
+                      </label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light text-secondary border-end-0 px-3">
+                          <i class="bi bi-lock-fill fs-6"></i>
+                        </span>
+                        <input type="password" id="auth-login-password" class="form-control border-start-0 border-end-0 py-2" placeholder="Enter your password" required autocomplete="current-password">
+                        <button class="btn btn-outline-secondary bg-light border-start-0 text-secondary px-3" type="button" id="btn-toggle-password" onclick="App.togglePasswordVisibility('auth-login-password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Captcha Verification -->
+                    <div class="mb-3 p-3 bg-light rounded-3 border">
+                      <label class="form-label small fw-bold text-dark d-flex align-items-center justify-content-between mb-2">
+                        <span><i class="bi bi-shield-check me-1 text-primary"></i> Captcha Verification</span>
+                        <span class="badge bg-secondary-subtle text-secondary" style="font-size: 0.7rem;">Security Check</span>
+                      </label>
+                      
+                      <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
+                        <div id="auth-captcha-box" class="auth-captcha-visual shadow-sm" title="Security Captcha Visual">
+                          <!-- Injected SVG -->
+                          <div class="spinner-border spinner-border-sm text-secondary" role="status"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 py-2 px-3 fw-semibold" id="auth-captcha-refresh-btn" onclick="App.refreshCaptcha()" title="Refresh Captcha">
+                          <i class="bi bi-arrow-clockwise"></i> Refresh captcha
+                        </button>
+                        <input type="hidden" id="auth-login-captcha-id" value="">
+                      </div>
+
+                      <div>
+                        <label for="auth-login-captcha" class="form-label small text-muted mb-1">Enter the text shown above</label>
+                        <input type="text" id="auth-login-captcha" class="form-control text-uppercase fw-bold" placeholder="Enter captcha code" maxlength="8" style="letter-spacing: 2px;" required autocomplete="off">
+                      </div>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="auth-login-remember" checked>
+                        <label class="form-check-label small fw-semibold text-secondary" for="auth-login-remember">
+                          Remember Me
+                        </label>
+                      </div>
+                      <a href="javascript:void(0)" class="small fw-bold text-decoration-none" style="color: #90231D;" onclick="App.openForgotPasswordModal()">
+                        Forgot Password?
+                      </a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" id="btn-login-submit" class="btn btn-vscms-maroon w-100 py-3 fw-bold text-uppercase fs-6 shadow-sm mb-3 d-flex align-items-center justify-content-center gap-2">
+                      <span id="btn-login-spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                      <span id="btn-login-text"><i class="bi bi-box-arrow-in-right me-1"></i> SIGN IN TO PORTAL</span>
+                    </button>
+                  </form>
+
+                  <!-- Registration CTA -->
+                  <div class="text-center py-2 border-top">
+                    <span class="text-secondary small">Don't have an account?</span>
+                    <button type="button" class="btn btn-link btn-sm fw-bold text-decoration-none ms-1" style="color: #FFA112; font-size: 0.9rem;" onclick="App.switchAuthTab('register')">
+                      Register as Student / Alumni <i class="bi bi-arrow-right"></i>
+                    </button>
+                  </div>
+
+                </div>
+
+                <!-- TAB 2: REGISTRATION PANE (Section 17) -->
+                <div id="auth-pane-register" class="auth-tab-pane d-none">
+                  <div class="mb-4 text-center">
+                    <h3 class="fw-bold text-dark mb-1" style="font-size: 1.55rem; letter-spacing: -0.3px;">New Institutional Registration</h3>
+                    <p class="text-secondary small mb-0">Select your status to create your verified Dr. Virendra Swarup College account.</p>
+                  </div>
+
+                  <!-- Role Switcher Segmented Control -->
+                  <div class="d-flex justify-content-center mb-4">
+                    <div class="btn-group p-1 bg-light rounded-pill border" role="group" aria-label="Registration Type">
+                      <button type="button" class="btn btn-sm rounded-pill fw-bold px-4 py-2 btn-vscms-maroon" id="btn-regtype-student" onclick="App.switchRegType('student')">
+                        <i class="bi bi-mortarboard-fill me-1"></i> Student Registration
+                      </button>
+                      <button type="button" class="btn btn-sm rounded-pill fw-bold px-4 py-2 btn-light text-secondary" id="btn-regtype-alumni" onclick="App.switchRegType('alumni')">
+                        <i class="bi bi-person-workspace me-1"></i> Alumni Registration
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- In-Card Registration Alert Box -->
+                  <div id="auth-reg-alert" class="alert d-none mb-3 py-2 px-3 align-items-center gap-2" role="alert" style="border-radius: 8px; font-size: 0.88rem;">
+                    <i class="bi bi-exclamation-circle-fill fs-5 flex-shrink-0"></i>
+                    <span id="auth-reg-alert-msg" class="flex-grow-1"></span>
+                    <button type="button" class="btn-close btn-sm ms-auto" aria-label="Close" onclick="App.hideRegAlert()"></button>
+                  </div>
+
+                  <!-- Verification Status Notice (Section 17) -->
+                  <div class="alert alert-warning py-2 px-3 small mb-3 border-0 d-flex align-items-center gap-2" style="background-color: #FFFBEB; border-left: 3px solid #FFA112 !important;">
+                    <i class="bi bi-shield-exclamation fs-5 text-warning flex-shrink-0"></i>
+                    <div>
+                      <strong>Verification Status: Pending Verification.</strong>
+                      <span class="text-muted">Your profile is automatically cross-referenced against the CMS Kanpur institutional database (AKTU Code 050).</span>
+                    </div>
+                  </div>
+
+                  <form id="form-vscms-register" onsubmit="App.submitPageRegister(event)">
+                    <!-- Hidden field to hold current registration role: student or alumni -->
+                    <input type="hidden" id="vscms-reg-role" value="student">
+
+                    <div class="row g-3">
+                      <!-- Full Name -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" id="reg-fullname" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                      </div>
+
+                      <!-- Course (BCA / MCA) -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark">Course <span class="text-danger">*</span></label>
+                        <select id="reg-course" class="form-select">
+                          <option value="BCA">BCA (Bachelor of Computer Applications)</option>
+                          <option value="MCA">MCA (Master of Computer Applications)</option>
+                        </select>
+                      </div>
+
+                      <!-- Batch -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark">Batch (Joining Year) <span class="text-danger">*</span></label>
+                        <input type="number" id="reg-batch" class="form-control" placeholder="e.g. 2021" min="1980" max="2040" value="2021" required>
+                      </div>
+
+                      <!-- Graduation Year (Alumni only) -->
+                      <div class="col-md-6 reg-alumni-only d-none">
+                        <label class="form-label small fw-bold text-dark">Graduation Year <span class="text-danger">*</span></label>
+                        <input type="number" id="reg-gradyear" class="form-control" placeholder="e.g. 2024 (any past or upcoming year)" min="1980" max="2045" value="2024">
+                        <small class="text-muted" style="font-size: 0.72rem;">Accepts any past graduation cohort or upcoming graduating year.</small>
+                      </div>
+
+                      <!-- Roll Number -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark" id="lbl-rollno">Roll Number <span class="text-danger">*</span></label>
+                        <input type="text" id="reg-rollno" class="form-control" placeholder="e.g. 21BCA042" required>
+                      </div>
+
+                      <!-- Enrollment Number -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark" id="lbl-enrollment">Enrollment Number <span class="text-danger">*</span></label>
+                        <input type="text" id="reg-enrollment" class="form-control" placeholder="e.g. CMS2021BCA042" required>
+                      </div>
+
+                      <!-- Email / College Email -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark" id="lbl-primary-email">College Email <span class="text-danger">*</span></label>
+                        <input type="email" id="reg-email" class="form-control" placeholder="username@cmskanpur.edu.in" required>
+                      </div>
+
+                      <!-- Personal Email (Student only) -->
+                      <div class="col-md-6 reg-student-only">
+                        <label class="form-label small fw-bold text-dark">Personal Email</label>
+                        <input type="email" id="reg-personal-email" class="form-control" placeholder="personal.email@gmail.com">
+                      </div>
+
+                      <!-- Phone -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark">Phone Number</label>
+                        <input type="tel" id="reg-phone" class="form-control" placeholder="e.g. 9876543210">
+                      </div>
+
+                      <!-- Alumni Specific: Current Company -->
+                      <div class="col-md-6 reg-alumni-only d-none">
+                        <label class="form-label small fw-bold text-dark">Current Company <span class="text-danger">*</span></label>
+                        <input type="text" id="reg-company" class="form-control" placeholder="e.g. Microsoft, TCS, Infosys, Startup">
+                      </div>
+
+                      <!-- Alumni Specific: Job Role -->
+                      <div class="col-md-6 reg-alumni-only d-none">
+                        <label class="form-label small fw-bold text-dark">Job Role <span class="text-danger">*</span></label>
+                        <input type="text" id="reg-jobrole" class="form-control" placeholder="e.g. Software Engineer, Data Analyst">
+                      </div>
+
+                      <!-- Password -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark">Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                          <input type="password" id="reg-password" class="form-control" placeholder="Min. 6 characters" required>
+                          <button class="btn btn-outline-secondary bg-light border-start-0 text-secondary px-3" type="button" onclick="App.togglePasswordVisibility('reg-password', this)">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Confirm Password -->
+                      <div class="col-md-6">
+                        <label class="form-label small fw-bold text-dark">Confirm Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                          <input type="password" id="reg-confirmpassword" class="form-control" placeholder="Re-enter password" required>
+                          <button class="btn btn-outline-secondary bg-light border-start-0 text-secondary px-3" type="button" onclick="App.togglePasswordVisibility('reg-confirmpassword', this)">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="btn-reg-submit" class="btn btn-vscms-maroon w-100 py-3 fw-bold text-uppercase fs-6 shadow-sm mt-4 mb-3 d-flex align-items-center justify-content-center gap-2">
+                      <span id="btn-reg-spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                      <span id="btn-reg-text"><i class="bi bi-person-check-fill me-1"></i> Register as Student</span>
+                    </button>
+                  </form>
+
+                  <!-- Link to Login -->
+                  <div class="text-center py-2 border-top">
+                    <span class="text-secondary small">Already have an institutional account?</span>
+                    <button type="button" class="btn btn-link btn-sm fw-bold text-decoration-none ms-1" style="color: #90231D; font-size: 0.9rem;" onclick="App.switchAuthTab('login')">
+                      Sign In to Portal <i class="bi bi-arrow-right"></i>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Features Highlights below Card -->
+            <div class="row g-3 mt-4">
+              <div class="col-md-4 text-center">
+                <div class="p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                  <i class="bi bi-shield-check fs-2 mb-2 d-block" style="color: #FFA112;"></i>
+                  <h6 class="fw-bold mb-1 text-dark">Verified Alumni Directory</h6>
+                  <p class="small text-secondary mb-0">Search CMS BCA & MCA alumni by tech stack, company, batch & city.</p>
+                </div>
+              </div>
+              <div class="col-md-4 text-center">
+                <div class="p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                  <i class="bi bi-briefcase-fill fs-2 mb-2 d-block" style="color: #162E5F;"></i>
+                  <h6 class="fw-bold mb-1 text-dark">Direct Referrals</h6>
+                  <p class="small text-secondary mb-0">Request internal job referrals from alumni at top tech enterprises.</p>
+                </div>
+              </div>
+              <div class="col-md-4 text-center">
+                <div class="p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                  <i class="bi bi-person-video3 fs-2 mb-2 d-block" style="color: #90231D;"></i>
+                  <h6 class="fw-bold mb-1 text-dark">1-on-1 Mentorship</h6>
+                  <p class="small text-secondary mb-0">Book mock interviews, code reviews, and capstone project advice.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. HOME VIEW -->
+  <section id="view-home" class="view-section">
+    <!-- Hero Banner -->
+    <div class="hero-section">
+      <div class="container py-4 position-relative" style="z-index: 2">
+        <div class="row align-items-center">
+          <div class="col-lg-7">
+            <h1 class="hero-title mb-3">Connecting BCA & MCA Talent with Tech Industry Leaders.</h1>
+            <p class="hero-subtitle mb-4">
+              Explore alumni networks at Microsoft, Amazon, Zomato, TCS, and high-growth tech firms. Request internal referrals, book 1-on-1 alumni mentorship, submit industry capstone proposals, and accelerate your career.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+              <a href="#alumni" class="btn btn-primary-cms px-4 py-2" data-view="alumni">
+                <i class="bi bi-search me-1"></i> Search Alumni Directory
+              </a>
+              <a href="#jobs" class="btn btn-outline-light px-4 py-2" data-view="jobs">
+                <i class="bi bi-send-check me-1"></i> Placement Referrals
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-5 mt-4 mt-lg-0">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="hero-stat">
+                  <div class="num">500+</div>
+                  <div class="label">BCA & MCA Alumni</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="hero-stat">
+                  <div class="num">85+</div>
+                  <div class="label">Partner Tech Companies</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="hero-stat">
+                  <div class="num">100%</div>
+                  <div class="label">Verified CMS Profiles</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="hero-stat">
+                  <div class="num">40+</div>
+                  <div class="label">Referrals This Term</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Alumni Showcase -->
+    <div class="container py-5">
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <h3 class="fw-bold text-dark mt-1">Featured Tech Alumni</h3>
+          <p class="text-muted mb-0 small">CMS Kanpur graduates leading software engineering, cloud architecture, and data science.</p>
+        </div>
+        <a href="#alumni" class="btn btn-outline-cms btn-sm" data-view="alumni">View All Alumni <i class="bi bi-arrow-right ms-1"></i></a>
+      </div>
+      <div class="row" id="home-featured-alumni">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Latest Placements & Referral Opportunities -->
+    <div class="bg-white py-5 border-top border-bottom">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+          <div>
+            <span class="text-success fw-bold text-uppercase small"><i class="bi bi-lightning-charge-fill me-1"></i> Active Hiring</span>
+            <h3 class="fw-bold text-dark mt-1">Latest Jobs & Internal Referrals</h3>
+            <p class="text-muted mb-0 small">Exclusive openings posted by verified CMS alumni with internal referral support.</p>
+          </div>
+          <a href="#jobs" class="btn btn-outline-cms btn-sm" data-view="jobs">Explore All Jobs <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+        <div class="row" id="home-latest-jobs">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Events & Hackathons -->
+    <div class="container py-5">
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <span class="text-danger fw-bold text-uppercase small"><i class="bi bi-trophy-fill me-1"></i> Competitions & Workshops</span>
+          <h3 class="fw-bold text-dark mt-1">Upcoming Tech Events</h3>
+          <p class="text-muted mb-0 small">Join hackathons, webinars, and guest lectures hosted by CMS alumni.</p>
+        </div>
+        <a href="#events" class="btn btn-outline-cms btn-sm" data-view="events">All Events <i class="bi bi-arrow-right ms-1"></i></a>
+      </div>
+      <div class="row" id="home-events">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. ALUMNI DIRECTORY VIEW -->
+  <section id="view-alumni" class="view-section d-none py-4">
+    <div class="container">
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+          <h3 class="fw-bold text-dark mb-1">BCA & MCA Alumni Directory</h3>
+          <p class="text-muted small mb-0">Search and filter verified CMS Kanpur graduates by course, graduation batch, current company, and technical stack.</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-2 mt-md-0">
+          <span id="alumni-count-badge" class="badge bg-primary fs-6 px-3 py-2">Loading Alumni...</span>
+        </div>
+      </div>
+
+      <!-- Filter Controls Bar -->
+      <div class="card-modern p-3 mb-4">
+        <div class="row g-2 align-items-center">
+          <div class="col-lg-3 col-md-6">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+              <input type="text" id="filter-alumni-search" class="form-control" placeholder="Search name, title..." oninput="App.renderAlumniDirectory()">
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-3 col-6">
+            <select id="filter-alumni-course" class="form-select form-select-sm" onchange="App.renderAlumniDirectory()">
+              <option value="">Course: All</option>
+              <option value="BCA">BCA Only</option>
+              <option value="MCA">MCA Only</option>
+            </select>
+          </div>
+          <div class="col-lg-2 col-md-3 col-6">
+            <input type="text" id="filter-alumni-tech" class="form-control form-control-sm" placeholder="Technology (e.g. Python)" oninput="App.renderAlumniDirectory()">
+          </div>
+          <div class="col-lg-2 col-md-4 col-6">
+            <input type="text" id="filter-alumni-company" class="form-control form-control-sm" placeholder="Company (e.g. Microsoft)" oninput="App.renderAlumniDirectory()">
+          </div>
+          <div class="col-lg-3 col-md-8 col-12 d-flex align-items-center gap-3 justify-content-end">
+            <div class="form-check form-check-inline mb-0">
+              <input class="form-check-input" type="checkbox" id="filter-alumni-mentor" onchange="App.renderAlumniDirectory()">
+              <label class="form-check-label small" for="filter-alumni-mentor">Mentor</label>
+            </div>
+            <div class="form-check form-check-inline mb-0">
+              <input class="form-check-input" type="checkbox" id="filter-alumni-referral" onchange="App.renderAlumniDirectory()">
+              <label class="form-check-label small" for="filter-alumni-referral">Referral</label>
+            </div>
+            <button class="btn btn-xs btn-outline-secondary" onclick="App.resetAlumniFilters()"><i class="bi bi-arrow-counterclockwise"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alumni Grid -->
+      <div class="row" id="alumni-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. JOBS, INTERNSHIPS & REFERRALS VIEW -->
+  <section id="view-jobs" class="view-section d-none py-4">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <div>
+          <h3 class="fw-bold text-dark mb-1">Placements, Internships & Alumni Referrals</h3>
+          <p class="text-muted small mb-0">Connect directly with CMS alumni hiring managers and employees offering internal employee referrals.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary-cms btn-sm" onclick="App.openCreateJobModal()">
+            <i class="bi bi-plus-circle me-1"></i> Post Opportunity
+          </button>
+        </div>
+      </div>
+
+      <!-- Job Filters -->
+      <div class="card-modern p-3 mb-4">
+        <div class="row g-2 align-items-center">
+          <div class="col-md-4">
+            <input type="text" id="filter-job-search" class="form-control form-control-sm" placeholder="Search title, company, skills..." oninput="App.renderJobs()">
+          </div>
+          <div class="col-md-3 col-6">
+            <select id="filter-job-type" class="form-select form-select-sm" onchange="App.renderJobs()">
+              <option value="">Opportunity Type: All</option>
+              <option value="full_time">Full-time Roles</option>
+              <option value="internship">Internships Only</option>
+              <option value="freelance">Freelance / Contract</option>
+            </select>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="form-check mt-1">
+              <input class="form-check-input" type="checkbox" id="filter-job-referral" onchange="App.renderJobs()">
+              <label class="form-check-label small fw-bold text-primary" for="filter-job-referral">
+                <i class="bi bi-send-check me-1"></i> Referral Available Only
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jobs Grid -->
+      <div class="row" id="jobs-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. MENTORSHIP VIEW -->
+  <section id="view-mentorship" class="view-section d-none py-4">
+    <div class="container">
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+          <h3 class="fw-bold text-dark mb-1">Alumni Mentorship & Career Guidance</h3>
+          <p class="text-muted small mb-0">Book 1-on-1 virtual sessions with senior alumni for LeetCode guidance, system design, mock interviews, and resume reviews.</p>
+        </div>
+      </div>
+
+      <!-- Mentors Grid -->
+      <div class="row" id="mentors-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. INDUSTRY PROJECTS & PROBLEM STATEMENTS VIEW -->
+  <section id="view-projects" class="view-section d-none py-4">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <div>
+          <h3 class="fw-bold text-dark mb-1">Industry Problem Statements & Co-Guidance</h3>
+          <p class="text-muted small mb-0">Real-world production challenges curated by CMS alumni for BCA and MCA final year capstone projects.</p>
+        </div>
+      </div>
+      <div class="row" id="projects-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. TECHNICAL RESOURCE REPOSITORY VIEW -->
+  <section id="view-resources" class="view-section d-none py-4">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <div>
+          <h3 class="fw-bold text-dark mb-1">Technical Resource Repository</h3>
+          <p class="text-muted small mb-0">Curated DSA roadmaps, production architectures, SQL cheat sheets, and placement preparation archives.</p>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="d-flex flex-wrap gap-2 mb-4" id="resource-categories-list">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Resources Grid -->
+      <div class="row" id="resources-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. EVENTS & HACKATHONS VIEW -->
+  <section id="view-events" class="view-section d-none py-4">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+        <div>
+          <h3 class="fw-bold text-dark mb-1">Hackathons, Tech Fests & Guest Lectures</h3>
+          <p class="text-muted small mb-0">Participate as a student hacker, judge, speaker, or mentor in CMS technical events.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary-cms btn-sm" onclick="App.openCreateEventModal()">
+            <i class="bi bi-calendar-plus me-1"></i> Host Event / Hackathon
+          </button>
+        </div>
+      </div>
+      <div class="row" id="events-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. MESSAGING VIEW -->
+  <section id="view-messages" class="view-section d-none py-4">
+    <div class="container">
+      <h3 class="fw-bold text-dark mb-3">Internal Messaging</h3>
+      <div class="chat-container">
+        <!-- Conversations List -->
+        <div class="chat-sidebar">
+          <div class="p-3 border-bottom bg-light fw-bold small text-dark d-flex align-items-center justify-content-between">
+            <span>Conversations</span>
+            <i class="bi bi-chat-left-text text-primary"></i>
+          </div>
+          <div id="conversations-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Chat Thread -->
+        <div class="chat-thread">
+          <div class="p-3 border-bottom bg-white d-flex align-items-center justify-content-between">
+            <div>
+              <strong id="chat-recipient-name" class="text-dark">Select a Conversation</strong>
+              <div class="text-muted small" style="font-size:0.75rem">Privacy Protected • CMS Internal Network</div>
+            </div>
+          </div>
+          <div id="chat-messages-container" class="chat-messages">
+            <div class="p-5 text-center text-muted small">Choose an alumni or student to view conversation.</div>
+          </div>
+          <div class="p-3 bg-white border-top">
+            <form onsubmit="event.preventDefault(); App.sendChatMessage();" class="d-flex gap-2">
+              <input type="text" id="chat-message-input" class="form-control" placeholder="Type your message here..." required>
+              <button type="submit" class="btn btn-primary-cms px-3"><i class="bi bi-send-fill"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. PROFILE VIEW -->
+  <section id="view-profile" class="view-section d-none py-4">
+    <div class="container">
+      <div class="card-modern p-4" id="profile-form-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. ADMIN DASHBOARD VIEW -->
+  <section id="view-admin" class="view-section d-none py-4">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <span class="badge bg-danger mb-1">Administrative Control Center</span>
+          <h3 class="fw-bold text-dark mb-0">CMS Kanpur Administration & Analytics</h3>
+        </div>
+      </div>
+
+      <!-- KPI Stat Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-2 col-6">
+          <div class="admin-metric-card">
+            <div>
+              <div class="text-muted small">Total Alumni</div>
+              <div class="fs-4 fw-bold text-dark" id="admin-stat-alumni">0</div>
+            </div>
+            <div class="admin-metric-icon bg-primary-subtle text-primary"><i class="bi bi-people"></i></div>
+          </div>
+        </div>
+        <div class="col-md-2 col-6">
+          <div class="admin-metric-card">
+            <div>
+              <div class="text-muted small">Students</div>
+              <div class="fs-4 fw-bold text-dark" id="admin-stat-students">0</div>
+            </div>
+            <div class="admin-metric-icon bg-info-subtle text-info"><i class="bi bi-mortarboard"></i></div>
+          </div>
+        </div>
+        <div class="col-md-2 col-6">
+          <div class="admin-metric-card">
+            <div>
+              <div class="text-muted small">Verified</div>
+              <div class="fs-4 fw-bold text-success" id="admin-stat-verified">0</div>
+            </div>
+            <div class="admin-metric-icon bg-success-subtle text-success"><i class="bi bi-shield-check"></i></div>
+          </div>
+        </div>
+        <div class="col-md-2 col-6">
+          <div class="admin-metric-card">
+            <div>
+              <div class="text-muted small">Pending Review</div>
+              <div class="fs-4 fw-bold text-warning" id="admin-stat-pending">0</div>
+            </div>
+            <div class="admin-metric-icon bg-warning-subtle text-warning"><i class="bi bi-clock-history"></i></div>
+          </div>
+        </div>
+        <div class="col-md-2 col-6">
+          <div class="admin-metric-card">
+            <div>
+              <div class="text-muted small">Jobs Posted</div>
+              <div class="fs-4 fw-bold text-primary" id="admin-stat-jobs">0</div>
+            </div>
+            <div class="admin-metric-icon bg-purple-subtle text-primary"><i class="bi bi-briefcase"></i></div>
+          </div>
+        </div>
+        <div class="col-md-2 col-6">
+          <div class="admin-metric-card">
+            <div>
+              <div class="text-muted small">Referral Track</div>
+              <div class="fs-4 fw-bold text-dark" id="admin-stat-referrals">0</div>
+            </div>
+            <div class="admin-metric-icon bg-light text-dark"><i class="bi bi-send-check"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="row mb-4">
+        <div class="col-lg-4 mb-3 mb-lg-0">
+          <div class="card-modern p-3 h-100">
+            <h6 class="fw-bold text-dark mb-3"><i class="bi bi-bar-chart me-1"></i> Alumni by Graduation Batch</h6>
+            <canvas id="chart-batch-distribution" height="220"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-4 mb-3 mb-lg-0">
+          <div class="card-modern p-3 h-100">
+            <h6 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart me-1"></i> Top Hiring Companies</h6>
+            <canvas id="chart-company-distribution" height="220"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card-modern p-3 h-100">
+            <h6 class="fw-bold text-dark mb-3"><i class="bi bi-stack me-1"></i> Most Demanded Tech Skills</h6>
+            <canvas id="chart-tech-distribution" height="220"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Queue Table -->
+      <div class="card-modern p-4 mb-4">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-patch-question me-1 text-warning"></i> Pending Institutional Verification Queue</h5>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small">
+              <tr>
+                <th>Name / Email</th>
+                <th>Type</th>
+                <th>Course / Batch</th>
+                <th>Roll & Enrollment No</th>
+                <th>Current Affiliation</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="verification-queue-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- User Management Table -->
+      <div class="card-modern p-4 mb-4">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-people me-1"></i> User Account Administration</h5>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small">
+              <tr>
+                <th>ID</th>
+                <th>Name / Email</th>
+                <th>Role</th>
+                <th>Course / Batch</th>
+                <th>Verification</th>
+                <th>Account Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Newsletter Dispatcher -->
+      <div class="card-modern p-4 mb-4">
+        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-envelope-paper me-1 text-primary"></i> Broadcast Alumni Newsletter</h5>
+        <p class="text-muted small">Compose and dispatch announcements, placement achievements, and technical event reminders to all subscribers.</p>
+        <form id="form-newsletter" onsubmit="App.broadcastNewsletter(event)">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Newsletter Title</label>
+            <input type="text" id="nl-title" class="form-control" placeholder="e.g. CMS Kanpur Technical Gazette - Q4 2026" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Content (HTML formatted)</label>
+            <textarea id="nl-content" class="form-control font-monospace" rows="4" placeholder="<p>Highlights of recent campus placements...</p>" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary-cms"><i class="bi bi-send me-1"></i> Broadcast Newsletter</button>
+        </form>
+      </div>
+
+      <!-- Audit Logs Stream -->
+      <div class="card-modern p-4">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-lock me-1"></i> Security & Operation Audit Logs</h5>
+        <div class="table-responsive">
+          <table class="table table-sm table-striped align-middle mb-0">
+            <thead class="table-light small">
+              <tr>
+                <th>Action</th>
+                <th>User</th>
+                <th>Details</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="admin-audit-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Sign In Modal -->
+  <div class="modal fade" id="modal-login" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Sign In to CMS AlumniConnect</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">Access your technical profile, internal job referrals, and mentorship schedule.</p>
+          <form onsubmit="App.submitLogin(event)">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">College / Personal Email</label>
+              <input type="email" id="login-email" class="form-control" placeholder="name@cmskanpur.edu.in" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Password</label>
+              <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <small class="text-muted">Seed Demo: <code>aarav.sharma@microsoft.com</code> / <code>Alumni@CMS2025</code></small>
+            </div>
+            <button type="submit" class="btn btn-primary-cms w-100 py-2">Sign In</button>
+          </form>
+          <div class="text-center mt-3 small">
+            <span class="text-muted">Don't have an account? </span>
+            <a href="#" class="text-primary fw-bold" onclick="bootstrap.Modal.getInstance(document.getElementById('modal-login')).hide(); App.openRegisterModal();">Register Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal fade" id="modal-register" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Join CMS Kanpur Alumni Platform</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">Student and alumni accounts are verified against the authorized CMS institutional registry.</p>
+          <form onsubmit="App.submitRegister(event)">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Full Name</label>
+                <input type="text" id="reg-name" class="form-control" placeholder="e.g. Karan Malhotra" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Email Address</label>
+                <input type="email" id="reg-email" class="form-control" placeholder="karan@cmskanpur.edu.in" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Password</label>
+                <input type="password" id="reg-password" class="form-control" placeholder="Min. 6 characters" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Account Role</label>
+                <select id="reg-role" class="form-select" onchange="document.getElementById('alumni-extra-fields').classList.toggle('d-none', this.value !== 'alumni')">
+                  <option value="student">Student (Currently Enrolled)</option>
+                  <option value="alumni">Alumni (Graduated)</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Course</label>
+                <select id="reg-course" class="form-select">
+                  <option value="BCA">BCA (Bachelor of Computer Applications)</option>
+                  <option value="MCA">MCA (Master of Computer Applications)</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Roll Number</label>
+                <input type="text" id="reg-roll" class="form-control" placeholder="e.g. 22BCA077" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Enrollment Number</label>
+                <input type="text" id="reg-enrollment" class="form-control" placeholder="e.g. CMS2022BCA077" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Batch Year</label>
+                <input type="number" id="reg-batch" class="form-control" value="2022" required>
+              </div>
+
+              <!-- Extra fields for Alumni -->
+              <div id="alumni-extra-fields" class="row g-3 d-none col-12 m-0 p-0">
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">Current Company</label>
+                  <input type="text" id="reg-company" class="form-control" placeholder="e.g. Infosys, TCS, Startup">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">Job Title</label>
+                  <input type="text" id="reg-title" class="form-control" placeholder="e.g. Software Engineer">
+                </div>
+                <div class="col-12">
+                  <label class="form-label small fw-bold">Primary Skills</label>
+                  <input type="text" id="reg-skills" class="form-control" placeholder="e.g. Java, Python, React, AWS">
+                </div>
+              </div>
+
+              <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary-cms w-100 py-2">Create Account</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alumni Detail Profile Modal -->
+  <div class="modal fade" id="modal-alumni-detail" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4" id="alumni-modal-body">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Job Detail Modal -->
+  <div class="modal fade" id="modal-job-detail" tabindex="-1" aria-labelledby="modalJobDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+        <div class="modal-header border-0 pb-0 pt-3 px-4">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4 pb-4 pt-1" id="job-modal-body">
+          <!-- Rendered dynamically by App.openJobModal(id) -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply Job Modal -->
+  <div class="modal fade" id="modal-apply-job" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Apply for Position</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p id="apply-job-title" class="text-primary fw-bold mb-3"></p>
+          <input type="hidden" id="apply-job-id">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Resume Link (Google Drive / GitHub / PDF URL)</label>
+            <input type="url" id="apply-job-resume" class="form-control" placeholder="https://drive.google.com/file/d/...">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Cover Note / Introduction</label>
+            <textarea id="apply-job-note" class="form-control" rows="3" placeholder="Highlight your projects, LeetCode accomplishments, and fit for this role..."></textarea>
+          </div>
+          <button class="btn btn-primary-cms w-100" onclick="App.submitJobApplication()">Submit Application</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Referral Modal -->
+  <div class="modal fade" id="modal-request-referral" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold"><i class="bi bi-send-check text-primary me-1"></i> Request Internal Referral</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">Your request will be delivered to the alumni. Privacy is strictly maintained.</p>
+          <input type="hidden" id="referral-alumni-id">
+          <input type="hidden" id="referral-job-id">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Target Company</label>
+            <input type="text" id="referral-target-company" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Target Role / Job ID</label>
+            <input type="text" id="referral-target-role" class="form-control" placeholder="e.g. SDE-1 / Job #9281" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Resume Link (Drive / Dropbox)</label>
+            <input type="url" id="referral-resume-link" class="form-control" placeholder="https://drive.google.com/file/d/..." required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Personal Note to Alumnus</label>
+            <textarea id="referral-note" class="form-control" rows="3" placeholder="Briefly introduce your BCA/MCA achievements, LeetCode profile, and projects..."></textarea>
+          </div>
+          <button class="btn btn-primary-cms w-100" onclick="App.submitReferralRequest()">Dispatch Referral Request</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Mentorship Modal -->
+  <div class="modal fade" id="modal-request-mentorship" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold"><i class="bi bi-person-video3 text-primary me-1"></i> Request 1-on-1 Mentorship</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">Mentor: <strong id="mentorship-mentor-name"></strong></p>
+          <input type="hidden" id="mentorship-mentor-id">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Mentorship Topic / Focus</label>
+            <input type="text" id="mentorship-topic" class="form-control" placeholder="e.g. Cracking LeetCode, Spring Boot Architecture, Placement Prep" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Goals & Proposed Timeline</label>
+            <textarea id="mentorship-message" class="form-control" rows="4" placeholder="Describe your current status, questions, and what you hope to achieve..." required></textarea>
+          </div>
+          <button class="btn btn-primary-cms w-100" onclick="App.submitMentorshipRequest()">Send Request</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock Interview Modal -->
+  <div class="modal fade" id="modal-mock-interview" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Book Mock Interview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">Interviewer: <strong id="mock-interviewer-name"></strong></p>
+          <input type="hidden" id="mock-interviewer-id">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Interview Track</label>
+            <select id="mock-interview-type" class="form-select">
+              <option value="technical">Technical / Coding DSA Interview</option>
+              <option value="system_design">System Design & Architecture</option>
+              <option value="resume_based">Resume-based Deep Dive</option>
+              <option value="hr">HR & Behavioral Interview</option>
+            </select>
+          </div>
+          <button class="btn btn-primary-cms w-100" onclick="App.submitMockInterview()">Request Slot</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Project Proposal Modal -->
+  <div class="modal fade" id="modal-submit-proposal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Submit Solution Proposal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-primary fw-bold mb-3" id="proposal-project-title"></p>
+          <input type="hidden" id="proposal-project-id">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Team Members (Names & Roll Numbers)</label>
+            <input type="text" id="proposal-team-members" class="form-control" placeholder="e.g. Aditya Tiwari (23BCA055), Ritu Yadav (23MCA021)" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Technical Proposal & Implementation Strategy</label>
+            <textarea id="proposal-text" class="form-control" rows="4" placeholder="Detail your tech stack choice, architecture design, milestones, and expected outcome..." required></textarea>
+          </div>
+          <button class="btn btn-primary-cms w-100" onclick="App.submitProjectProposal()">Submit for Faculty & Alumni Review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Register Modal -->
+  <div class="modal fade" id="modal-event-register" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Event Registration & RSVP</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-primary fw-bold mb-3" id="event-reg-title"></p>
+          <input type="hidden" id="event-reg-id">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Participation Role</label>
+            <select id="event-reg-role" class="form-select">
+              <option value="attendee">Attendee / Hacker (Student)</option>
+              <option value="mentor">Technical Mentor (Alumni)</option>
+              <option value="judge">Competition Judge (Alumni)</option>
+              <option value="speaker">Guest Speaker</option>
+            </select>
+          </div>
+          <button class="btn btn-primary-cms w-100" onclick="App.submitEventRegistration()">Confirm RSVP</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Host Event / Hackathon Modal -->
+  <div class="modal fade" id="modal-post-event" tabindex="-1" aria-labelledby="modalPostEventLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content p-3 border-0 shadow-lg" style="border-radius: 16px;">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold" id="modalPostEventLabel">
+            <i class="bi bi-calendar-event text-primary me-2"></i>Host Tech Event, Hackathon or Webinar
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">Host a technical webinar, coding competition, hackathon, or guest lecture for the CMS Kanpur tech community.</p>
+          <form onsubmit="event.preventDefault(); App.submitNewEvent();">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label small fw-bold">Event Title</label>
+                <input type="text" id="new-event-title" class="form-control" placeholder="e.g. Masterclass: System Design for High-Traffic Applications" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Event Type</label>
+                <select id="new-event-type" class="form-select">
+                  <option value="webinar">Webinar / Masterclass</option>
+                  <option value="hackathon">Hackathon</option>
+                  <option value="coding_competition">Coding Competition</option>
+                  <option value="workshop">Technical Workshop</option>
+                  <option value="guest_lecture">Guest Lecture</option>
+                  <option value="tech_fest">Tech Fest</option>
+                  <option value="alumni_meet">Alumni Meet</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Format</label>
+                <select id="new-event-is-online" class="form-select">
+                  <option value="true">Virtual / Online (Google Meet, Zoom, YouTube)</option>
+                  <option value="false">On-Campus / In-Person (CMS Auditorium, Lab)</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Venue or Meeting URL</label>
+                <input type="text" id="new-event-venue" class="form-control" placeholder="e.g. https://meet.google.com/xyz or CMS Auditorium" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Start Date & Time</label>
+                <input type="datetime-local" id="new-event-start" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">End Date & Time</label>
+                <input type="datetime-local" id="new-event-end" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Attendee Capacity</label>
+                <input type="number" id="new-event-capacity" class="form-control" value="150" min="10" max="1000" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Speaker / Mentor Info</label>
+                <input type="text" id="new-event-speaker" class="form-control" placeholder="e.g. SDE-2 at Microsoft, CMS '22 Alum">
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Event Description & Agenda</label>
+                <textarea id="new-event-desc" class="form-control" rows="3" placeholder="Outline the agenda, prerequisites, learning outcomes, and judging criteria..." required></textarea>
+              </div>
+              <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary-cms w-100">
+                  <i class="bi bi-calendar-check me-1"></i>Publish Event
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Profile Alert Modal -->
+  <div class="modal fade" id="modal-complete-profile" tabindex="-1" aria-labelledby="modalCompleteProfileLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 18px; overflow: hidden;">
+        <div class="modal-header text-white" style="background: linear-gradient(135deg, #162E5F 0%, #1E3A8A 100%);">
+          <h5 class="modal-title fw-bold" id="modalCompleteProfileLabel">
+            <i class="bi bi-person-fill-exclamation text-warning me-2"></i> Enhance Your Profile
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="App.dismissProfileModal()"></button>
+        </div>
+        <div class="modal-body p-4 text-center">
+          <div class="mb-3">
+            <div class="d-inline-flex align-items-center justify-content-center p-3 rounded-circle" style="background: #FEF3C7; color: #D97706; width: 68px; height: 68px; font-size: 1.8rem;">
+              <i class="bi bi-stars"></i>
+            </div>
+          </div>
+          <h5 class="fw-bold text-dark mb-1">Your Profile is Incomplete</h5>
+          <p class="text-secondary small mb-3">
+            A complete profile helps you unlock internal referrals, 1-on-1 mentorship, and tech capstone collaborations across CMS Kanpur.
+          </p>
+
+          <!-- Progress Bar -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small fw-bold mb-1">
+              <span class="text-dark">Profile Strength</span>
+              <span id="popup-profile-percent" class="text-primary fw-bold">40% Complete</span>
+            </div>
+            <div class="progress" style="height: 10px; border-radius: 6px; background-color: #E2E8F0;">
+              <div id="popup-profile-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 40%"></div>
+            </div>
+          </div>
+
+          <!-- Incomplete Items Checklist -->
+          <div class="text-start bg-light p-3 rounded-3 mb-4 border" id="popup-incomplete-items">
+            <!-- Dynamically populated checklist -->
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary w-50 fw-semibold" onclick="App.dismissProfileModal()">
+              Remind Later
+            </button>
+            <button type="button" class="btn btn-vscms-maroon w-50 fw-bold d-flex align-items-center justify-content-center gap-1" onclick="App.goToCompleteProfile()">
+              Complete Now <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add / Edit Experience Modal (LinkedIn Style) -->
+  <div class="modal fade" id="modal-add-experience" tabindex="-1" aria-labelledby="modalAddExperienceLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+        <div class="modal-header text-white" style="background-color: var(--vscms-navy);">
+          <h5 class="modal-title fw-bold" id="modalAddExperienceLabel">
+            <i class="bi bi-briefcase-fill text-warning me-2"></i> <span id="exp-modal-title">Add Work Experience</span>
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form onsubmit="App.submitExperience(event)">
+            <input type="hidden" id="exp-edit-id" value="">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-dark">Company Name <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="bi bi-building"></i></span>
+                  <input type="text" id="exp-company" class="form-control" placeholder="e.g. Microsoft, Amazon, TCS, Zomato" required oninput="App.previewCompanyLogo(this.value)">
+                  <span class="input-group-text bg-white p-1" id="exp-company-logo-preview" style="min-width: 40px; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-building text-muted"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-dark">Job Title / Role <span class="text-danger">*</span></label>
+                <input type="text" id="exp-title" class="form-control" placeholder="e.g. Senior Software Engineer / SDE-1" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-dark">Location</label>
+                <input type="text" id="exp-location" class="form-control" placeholder="e.g. Bengaluru, India • Hybrid">
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-check pt-4">
+                  <input class="form-check-input" type="checkbox" id="exp-is-current" onchange="document.getElementById('exp-end-date').disabled = this.checked; if(this.checked) document.getElementById('exp-end-date').value = 'Present';">
+                  <label class="form-check-label small fw-bold text-dark" for="exp-is-current">
+                    I currently work in this role
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-dark">Start Period <span class="text-danger">*</span></label>
+                <input type="text" id="exp-start-date" class="form-control" placeholder="e.g. July 2022" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-dark">End Period</label>
+                <input type="text" id="exp-end-date" class="form-control" placeholder="e.g. Present or May 2024">
+              </div>
+
+              <div class="col-12">
+                <label class="form-label small fw-bold text-dark">Description & Key Achievements</label>
+                <textarea id="exp-description" class="form-control" rows="3" placeholder="Describe your key responsibilities, projects developed, tech stack used, and accomplishments..."></textarea>
+              </div>
+
+              <div class="col-12 text-end pt-2">
+                <button type="button" class="btn btn-secondary btn-sm px-3 me-2" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" id="btn-save-experience" class="btn btn-vscms-maroon px-4 fw-bold">
+                  Save Experience
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Post Job Modal -->
+  <div class="modal fade" id="modal-post-job" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Post Career Opportunity</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form onsubmit="event.preventDefault(); App.submitNewJob();">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Job Title</label>
+                <input type="text" id="new-job-title" class="form-control" placeholder="e.g. Software Engineer (Backend)" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Company Name</label>
+                <input type="text" id="new-job-company" class="form-control" placeholder="e.g. Microsoft, Paytm, Startup" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Job Type</label>
+                <select id="new-job-type" class="form-select">
+                  <option value="full_time">Full-time</option>
+                  <option value="internship">Internship</option>
+                  <option value="freelance">Freelance / Contract</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Location Type</label>
+                <select id="new-job-loc-type" class="form-select">
+                  <option value="hybrid">Hybrid</option>
+                  <option value="remote">Remote</option>
+                  <option value="on_site">On-site</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Location / City</label>
+                <input type="text" id="new-job-location" class="form-control" value="Noida / Hybrid" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Salary / Stipend</label>
+                <input type="text" id="new-job-salary" class="form-control" placeholder="e.g. 8 - 14 LPA or 25k/month">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Required Skills (comma separated)</label>
+                <input type="text" id="new-job-skills" class="form-control" placeholder="e.g. Python, SQL, React" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Job Description</label>
+                <textarea id="new-job-desc" class="form-control" rows="3" placeholder="Job responsibilities, qualifications, and requirements..." required></textarea>
+              </div>
+              <div class="col-md-8">
+                <label class="form-label small fw-bold">Application URL (optional)</label>
+                <input type="url" id="new-job-url" class="form-control" placeholder="https://company.com/careers/...">
+              </div>
+              <div class="col-md-4 d-flex align-items-center mt-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="new-job-referral" checked>
+                  <label class="form-check-label small fw-bold" for="new-job-referral">I can provide referrals</label>
+                </div>
+              </div>
+              <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary-cms w-100">Publish Opportunity</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Forgot Password Recovery (Section 14 & 18) -->
+  <div class="modal fade" id="modal-forgot-password" tabindex="-1" aria-labelledby="modalForgotPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+        <div class="modal-header text-white" style="background-color: var(--vscms-maroon); border-bottom: none;">
+          <h5 class="modal-title fw-bold" id="modalForgotPasswordLabel">
+            <i class="bi bi-shield-lock-fill me-2"></i> Reset Portal Password
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <!-- Step 1: Request Code -->
+          <div id="forgot-step-1">
+            <p class="text-secondary small mb-3">
+              Enter your registered VSCMS institutional or personal email address. A secure verification reset code will be generated for your account.
+            </p>
+            <div id="forgot-alert-1" class="alert alert-danger py-2 px-3 small d-none" role="alert"></div>
+            <form onsubmit="App.requestPasswordReset(event)">
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-dark">Registered Email Address</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-secondary"><i class="bi bi-envelope"></i></span>
+                  <input type="email" id="forgot-email" class="form-control" placeholder="user@cmskanpur.edu.in" required>
+                </div>
+              </div>
+              <button type="submit" id="btn-forgot-step1" class="btn btn-vscms-maroon w-100 py-2 fw-bold text-uppercase fs-6">
+                Request Reset Code
+              </button>
+            </form>
+          </div>
+
+          <!-- Step 2: Confirm Reset -->
+          <div id="forgot-step-2" class="d-none">
+            <div class="alert alert-success py-2 px-3 small mb-3">
+              <i class="bi bi-check-circle-fill me-1"></i> Verification code generated! (Use simulated code: <strong>CMS-2025</strong>)
+            </div>
+            <div id="forgot-alert-2" class="alert alert-danger py-2 px-3 small d-none" role="alert"></div>
+            <form onsubmit="App.confirmPasswordReset(event)">
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-dark">Verification Code</label>
+                <input type="text" id="forgot-code" class="form-control" placeholder="e.g. CMS-2025" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-dark">New Password</label>
+                <input type="password" id="forgot-new-password" class="form-control" placeholder="Min. 6 characters" required>
+              </div>
+              <button type="submit" id="btn-forgot-step2" class="btn btn-vscms-maroon w-100 py-2 fw-bold text-uppercase fs-6">
+                Confirm & Set New Password
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Institutional Policies & Information -->
+  <div class="modal fade" id="modal-policy" tabindex="-1" aria-labelledby="modalPolicyLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+        <div class="modal-header text-white" style="background-color: var(--vscms-navy);">
+          <h5 class="modal-title fw-bold" id="modalPolicyLabel">Institutional Policy</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4" id="modal-policy-body" style="font-size: 0.9rem; line-height: 1.6;">
+          <!-- Injected policy content -->
+        </div>
+        <div class="modal-footer border-top-0">
+          <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container-custom" id="toast-container"></div>
+
+  <!-- Compact Institutional Footer (Section 21) -->
+  <footer class="footer-cms py-4">
+    <div class="container">
+      <div class="row align-items-center gy-3">
+        <div class="col-lg-6 text-center text-lg-start">
+          <div class="d-flex align-items-center justify-content-center justify-content-lg-start gap-3">
+            <img src="/static/img/vscms_logo.png" alt="VSCMS Seal" style="width: 42px; height: 42px; background: #ffffff; border-radius: 50%; padding: 2px;">
+            <div class="text-start">
+              <div class="text-white fw-bold small">© Dr. Virendra Swarup College of Management Studies, Kanpur</div>
+              <div class="text-light opacity-75" style="font-size: 0.75rem;">BCA & MCA Alumni Portal • AKTU College Code: 050</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center text-lg-end">
+          <div class="d-flex flex-wrap justify-content-center justify-content-lg-end align-items-center gap-3 small">
+            <a href="javascript:void(0)" onclick="App.showPolicyModal('privacy')" class="text-light opacity-75 text-decoration-none hover-opacity">Privacy Policy</a>
+            <span class="text-secondary opacity-50">•</span>
+            <a href="javascript:void(0)" onclick="App.showPolicyModal('terms')" class="text-light opacity-75 text-decoration-none hover-opacity">Terms</a>
+            <span class="text-secondary opacity-50">•</span>
+            <a href="mailto:cmskanpur@hotmail.com" class="text-light opacity-75 text-decoration-none hover-opacity">Contact</a>
+            <span class="text-secondary opacity-50">•</span>
+            <a href="javascript:void(0)" onclick="App.showPolicyModal('help')" class="text-light opacity-75 text-decoration-none hover-opacity">Help</a>
+            <span class="text-secondary opacity-50">•</span>
+            <a href="javascript:void(0)" onclick="App.showPolicyModal('accessibility')" class="text-light opacity-75 text-decoration-none hover-opacity">Accessibility</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts: Bootstrap 5, Chart.js, API & Application Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/static/js/api.js?v=2.5"></script>
+  <script src="/static/js/app.js?v=2.5"></script>
+  <script>
+    App.openCreateJobModal = function() {
+      if (!this.requireLogin()) return;
+      if (this.currentUser && this.currentUser.role === "student") {
+        this.showToast("Job and referral posting is reserved for Alumni, Faculty, and Admin.", "warning");
+        return;
+      }
+      new bootstrap.Modal(document.getElementById("modal-post-job")).show();
+    };
+
+    App.submitNewJob = async function() {
+      if (!this.requireLogin()) return;
+      const payload = {
+        title: document.getElementById("new-job-title").value,
+        company: document.getElementById("new-job-company").value,
+        job_type: document.getElementById("new-job-type").value,
+        location_type: document.getElementById("new-job-loc-type").value,
+        location: document.getElementById("new-job-location").value,
+        salary_range: document.getElementById("new-job-salary").value || null,
+        required_skills: document.getElementById("new-job-skills").value,
+        description: document.getElementById("new-job-desc").value,
+        external_apply_url: document.getElementById("new-job-url").value || null,
+        is_referral_available: document.getElementById("new-job-referral").checked
+      };
+
+      try {
+        const res = await API.post("/api/jobs", payload);
+        bootstrap.Modal.getInstance(document.getElementById("modal-post-job")).hide();
+        this.showToast(res.message, "success");
+        this.renderJobs();
+        if (typeof this.renderHome === "function") this.renderHome();
+      } catch (e) {
+        this.showToast(e.message, "danger");
+      }
+    };
+
+    App.openCreateEventModal = function() {
+      if (!this.requireLogin()) return;
+      if (this.currentUser && this.currentUser.role === "student") {
+        this.showToast("Event hosting is reserved for Alumni, Faculty, and Admin.", "warning");
+        return;
+      }
+      const now = new Date();
+      now.setDate(now.getDate() + 1);
+      now.setHours(10, 0, 0, 0);
+      const startIso = now.toISOString().slice(0, 16);
+      now.setHours(12, 0, 0, 0);
+      const endIso = now.toISOString().slice(0, 16);
+
+      const startInput = document.getElementById("new-event-start");
+      const endInput = document.getElementById("new-event-end");
+      if (startInput && !startInput.value) startInput.value = startIso;
+      if (endInput && !endInput.value) endInput.value = endIso;
+
+      new bootstrap.Modal(document.getElementById("modal-post-event")).show();
+    };
+
+    App.submitNewEvent = async function() {
+      if (!this.requireLogin()) return;
+      const startVal = document.getElementById("new-event-start").value;
+      const endVal = document.getElementById("new-event-end").value;
+      if (!startVal || !endVal) {
+        this.showToast("Please provide event start and end date/time.", "warning");
+        return;
+      }
+
+      const payload = {
+        title: document.getElementById("new-event-title").value,
+        event_type: document.getElementById("new-event-type").value,
+        is_online: document.getElementById("new-event-is-online").value === "true",
+        venue_or_link: document.getElementById("new-event-venue").value,
+        start_time: new Date(startVal).toISOString(),
+        end_time: new Date(endVal).toISOString(),
+        capacity: parseInt(document.getElementById("new-event-capacity").value) || 150,
+        speaker_info: document.getElementById("new-event-speaker").value || null,
+        description: document.getElementById("new-event-desc").value
+      };
+
+      try {
+        const res = await API.post("/api/events", payload);
+        bootstrap.Modal.getInstance(document.getElementById("modal-post-event")).hide();
+        this.showToast(res.message || "Event published successfully!", "success");
+        this.renderEvents();
+        if (typeof this.renderHome === "function") this.renderHome();
+      } catch (e) {
+        this.showToast(e.message, "danger");
+      }
+    };
+  </script>
+</body>
+</html>

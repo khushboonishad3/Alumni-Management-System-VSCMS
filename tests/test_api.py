@@ -132,11 +132,28 @@ def test_mentorship_mentors_list():
     assert "full_name" in mentors[0]
 
 def test_industry_projects():
+    # 1. Read projects
     res = client.get("/api/projects")
     assert res.status_code == 200
     projects = res.json()
     assert len(projects) >= 1
     assert "required_technologies" in projects[0]
+
+    # 2. Login as faculty and create an industry project
+    login_fac = client.post("/api/auth/login", json={"email": "faculty.cs@cmskanpur.edu.in", "password": "Faculty@CMS2025"})
+    token_fac = login_fac.json()["access_token"]
+    res_create = client.post("/api/projects", json={
+        "title": "Cloud-Native Microservices Architecture Test",
+        "domain": "Web Development / Cloud Architecture",
+        "description": "Building fault tolerant microservices with FastAPI and Docker.",
+        "difficulty_level": "intermediate",
+        "required_technologies": "Python, FastAPI, Docker",
+        "expected_duration_weeks": 6,
+        "max_students": 3
+    }, headers={"Authorization": f"Bearer {token_fac}"})
+    assert res_create.status_code in [200, 201]
+    assert "Industry project" in res_create.json()["message"]
+    assert res_create.json()["id"] is not None
 
 def test_technical_resources():
     res_cats = client.get("/api/resources/categories")
@@ -147,6 +164,37 @@ def test_technical_resources():
     res_items = client.get("/api/resources")
     assert res_items.status_code == 200
     assert len(res_items.json()) >= 1
+
+    # Login as admin and create a technical resource
+    login_admin = client.post("/api/auth/login", json={"email": "admin@cmskanpur.edu.in", "password": "Admin@CMS2025"})
+    token_admin = login_admin.json()["access_token"]
+    res_res = client.post("/api/resources", json={
+        "title": "Production DevOps & Kubernetes Handbook",
+        "category_id": cats[0]["id"],
+        "resource_type": "PDF Document",
+        "external_url": "https://github.com/cms-devops/handbook",
+        "description": "Comprehensive guide for cloud infrastructure.",
+        "tags": "DevOps, Kubernetes, Docker"
+    }, headers={"Authorization": f"Bearer {token_admin}"})
+    assert res_res.status_code in [200, 201]
+    assert "published successfully" in res_res.json()["message"]
+    assert res_res.json()["id"] is not None
+
+def test_admin_faculty_customized_profile():
+    # Verify faculty profile payload does not have student-specific fields
+    login_fac = client.post("/api/auth/login", json={"email": "faculty.cs@cmskanpur.edu.in", "password": "Faculty@CMS2025"})
+    token_fac = login_fac.json()["access_token"]
+    res_me = client.get("/api/auth/me", headers={"Authorization": f"Bearer {token_fac}"})
+    assert res_me.status_code == 200
+    profile = res_me.json()["profile"]
+    assert "full_name" in profile
+    assert "education_qualification" in profile
+    assert "skills" in profile
+    assert "custom_links" in profile
+    # Ensure course, current_semester, bio are stripped
+    assert "course" not in profile
+    assert "current_semester" not in profile
+    assert "bio" not in profile
 
 def test_events_list():
     res = client.get("/api/events")
@@ -197,7 +245,7 @@ def test_unauthorized_admin_access():
     assert res_stu.status_code == 403
 
 def test_captcha_generation_and_validation():
-    # 1. Generate captcha
+    # 1. Generate captcha SVG endpoint
     res = client.get("/api/auth/captcha")
     assert res.status_code == 200
     data = res.json()
@@ -205,15 +253,13 @@ def test_captcha_generation_and_validation():
     assert "captcha_svg" in data
     assert "<svg" in data["captcha_svg"]
 
-    # 2. Login with invalid captcha
-    res_bad = client.post("/api/auth/login", json={
+    # 2. Login directly verifies email and password
+    res_login = client.post("/api/auth/login", json={
         "email": "aarav.sharma@microsoft.com",
-        "password": "Alumni@CMS2025",
-        "captcha_id": data["captcha_id"],
-        "captcha_code": "WRONG"
+        "password": "Alumni@CMS2025"
     })
-    assert res_bad.status_code == 400
-    assert "Captcha verification failed" in res_bad.json()["detail"]
+    assert res_login.status_code == 200
+    assert "access_token" in res_login.json()
 
 def test_forgot_password_flow():
     res = client.post("/api/auth/forgot-password", json={

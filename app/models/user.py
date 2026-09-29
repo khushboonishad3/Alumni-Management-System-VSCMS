@@ -81,6 +81,7 @@ class StudentProfile(Base):
     custom_links = Column(Text, nullable=True) # JSON array of {platform, url}
     
     skills = Column(Text, default="Python, SQL, HTML, CSS, JavaScript")  # comma separated
+    education_qualification = Column(String(255), nullable=True)
     verification_status = Column(Enum(VerificationStatus), default=VerificationStatus.PENDING, index=True)
     verification_notes = Column(Text, nullable=True)
     
@@ -126,6 +127,7 @@ class AlumniProfile(Base):
     
     # Tech skills & Offerings
     skills = Column(Text, default="Python, Django, React, PostgreSQL")
+    education_qualification = Column(String(255), nullable=True)
     is_mentor = Column(Boolean, default=True, index=True)
     is_referral_provider = Column(Boolean, default=True, index=True)
     is_co_guide = Column(Boolean, default=False)

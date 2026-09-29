@@ -1113,6 +1113,13 @@ const App = {
     const container = document.getElementById("projects-grid");
     if (!container) return;
 
+    // Toggle Post Project button for alumni, faculty, admin, super_admin
+    const projActionBtn = document.getElementById("project-action-buttons");
+    if (projActionBtn) {
+      const canPost = this.currentUser && ["alumni", "faculty", "admin", "super_admin"].includes(this.currentUser.role);
+      projActionBtn.style.display = canPost ? "block" : "none";
+    }
+
     container.innerHTML = `<div class="col-12 py-5 text-center text-muted"><span class="spinner-border text-primary me-2"></span>Loading industry problems...</div>`;
 
     try {
@@ -1186,12 +1193,62 @@ const App = {
     }
   },
 
+  openCreateProjectModal() {
+    if (!this.requireLogin()) return;
+    const canPost = ["alumni", "faculty", "admin", "super_admin"].includes(this.currentUser.role);
+    if (!canPost) {
+      this.showToast("Posting industry problem statements is reserved for alumni, faculty, and administrators.", "warning");
+      return;
+    }
+    const modalEl = document.getElementById("modal-create-project");
+    if (modalEl) new bootstrap.Modal(modalEl).show();
+  },
+
+  async submitCreateProject(e) {
+    e.preventDefault();
+    const btn = document.getElementById("btn-submit-create-proj");
+    if (btn) btn.disabled = true;
+
+    const payload = {
+      title: document.getElementById("new-proj-title").value.trim(),
+      domain: document.getElementById("new-proj-domain").value,
+      difficulty: document.getElementById("new-proj-difficulty").value,
+      duration_weeks: parseInt(document.getElementById("new-proj-duration").value) || 8,
+      max_students: parseInt(document.getElementById("new-proj-students").value) || 4,
+      required_technologies: document.getElementById("new-proj-tech").value.trim(),
+      description: document.getElementById("new-proj-desc").value.trim(),
+      expected_outcome: document.getElementById("new-proj-outcome").value.trim() || null
+    };
+
+    try {
+      const res = await API.post("/api/projects", payload);
+      const modalEl = document.getElementById("modal-create-project");
+      if (modalEl) {
+        const inst = bootstrap.Modal.getInstance(modalEl);
+        if (inst) inst.hide();
+      }
+      this.showToast(res.message || "Industry problem statement posted successfully!", "success");
+      this.renderProjects();
+    } catch (err) {
+      this.showToast(err.message || "Failed to post problem statement.", "danger");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  },
+
   // ================= TECHNICAL RESOURCES =================
 
   async renderResources() {
     const container = document.getElementById("resources-grid");
     const catsContainer = document.getElementById("resource-categories-list");
     if (!container) return;
+
+    // Toggle Share Resource button for alumni, faculty, admin, super_admin
+    const resActionBtn = document.getElementById("resource-action-buttons");
+    if (resActionBtn) {
+      const canShare = this.currentUser && ["alumni", "faculty", "admin", "super_admin"].includes(this.currentUser.role);
+      resActionBtn.style.display = canShare ? "block" : "none";
+    }
 
     try {
       // 1. Categories
@@ -1267,6 +1324,56 @@ const App = {
     try {
       await API.post(`/api/resources/${id}/download`);
     } catch (e) {}
+  },
+
+  async openCreateResourceModal() {
+    if (!this.requireLogin()) return;
+    const canShare = ["alumni", "faculty", "admin", "super_admin"].includes(this.currentUser.role);
+    if (!canShare) {
+      this.showToast("Publishing technical resources is reserved for alumni, faculty, and administrators.", "warning");
+      return;
+    }
+
+    try {
+      const cats = await API.get("/api/resources/categories");
+      const catSelect = document.getElementById("new-res-category");
+      if (catSelect && cats.length > 0) {
+        catSelect.innerHTML = cats.map(c => `<option value="${c.id}">${this.escape(c.name)}</option>`).join("");
+      }
+    } catch (_) {}
+
+    const modalEl = document.getElementById("modal-create-resource");
+    if (modalEl) new bootstrap.Modal(modalEl).show();
+  },
+
+  async submitCreateResource(e) {
+    e.preventDefault();
+    const btn = document.getElementById("btn-submit-create-res");
+    if (btn) btn.disabled = true;
+
+    const payload = {
+      title: document.getElementById("new-res-title").value.trim(),
+      category_id: parseInt(document.getElementById("new-res-category").value),
+      resource_type: document.getElementById("new-res-type").value,
+      external_link: document.getElementById("new-res-link").value.trim(),
+      tags: document.getElementById("new-res-tags").value.trim(),
+      description: document.getElementById("new-res-desc").value.trim() || null
+    };
+
+    try {
+      const res = await API.post("/api/resources", payload);
+      const modalEl = document.getElementById("modal-create-resource");
+      if (modalEl) {
+        const inst = bootstrap.Modal.getInstance(modalEl);
+        if (inst) inst.hide();
+      }
+      this.showToast(res.message || "Technical resource published successfully!", "success");
+      this.renderResources();
+    } catch (err) {
+      this.showToast(err.message || "Failed to publish technical resource.", "danger");
+    } finally {
+      if (btn) btn.disabled = false;
+    }
   },
 
   // ================= EVENTS & HACKATHONS =================
@@ -1642,7 +1749,9 @@ const App = {
     try {
       const user = await API.get("/api/auth/me");
       this.currentUser = user;
+      const isAdminOrFaculty = ["super_admin", "admin", "faculty"].includes(user.role);
       const isAlumni = user.role === "alumni";
+      const isStudent = user.role === "student";
       const p = user.profile || {};
       const { percent, missingItems } = this.calculateProfileCompleteness(user);
 
@@ -1673,7 +1782,7 @@ const App = {
               </div>
               <p class="text-secondary small mb-0 mt-1">
                 ${percent >= 85 ? 'Awesome! Your profile is complete and ready for networking, mentorship, and placement referrals.' :
-                  `Complete the missing items (${missingItems.slice(0, 3).join(', ')}${missingItems.length > 3 ? '...' : ''}) to increase visibility to recruiters and alumni.`}
+                  `Complete the missing items (${missingItems.slice(0, 3).join(', ')}${missingItems.length > 3 ? '...' : ''}) to increase visibility across CMS Kanpur.`}
               </p>
             </div>
             <div style="min-width: 180px;">
@@ -1708,9 +1817,15 @@ const App = {
             ` : `
               <div class="pending-shield mb-3"><i class="bi bi-clock-history"></i> Verification Status: ${p.verification_status?.toUpperCase() || 'PENDING'}</div>
             `}
-            <p class="text-muted small">${this.escape(p.verification_notes || 'Awaiting administrator verification with CMS Kanpur records.')}</p>
+            <p class="text-muted small">${this.escape(p.verification_notes || 'Verified Institutional Account - CMS Kanpur.')}</p>
 
-            ${isAlumni ? `
+            ${isAdminOrFaculty ? `
+              <div class="p-3 bg-light rounded text-start small mb-3 border">
+                <div><strong>Role:</strong> ${user.role === 'faculty' ? 'Faculty / Professor' : user.role === 'super_admin' ? 'Super Administrator' : 'Administrator'}</div>
+                <div class="mt-1"><strong>Affiliation:</strong> Department of Computer Applications (CMS Kanpur)</div>
+                <div class="mt-1"><strong>Qualification:</strong> ${this.escape(p.education_qualification || 'Ph.D / M.Tech in Computer Science')}</div>
+              </div>
+            ` : isAlumni ? `
               <div class="p-3 bg-light rounded text-start small mb-3 border">
                 <div><strong>Current Role:</strong> ${this.escape(p.current_job_title || 'Not specified')}</div>
                 <div class="mt-1"><strong>Company:</strong> ${this.escape(p.current_company || 'Not specified')}</div>
@@ -1735,12 +1850,21 @@ const App = {
                   <label class="form-label small fw-bold">Full Name <span class="text-danger">*</span></label>
                   <input type="text" id="prof-name" class="form-control" value="${this.escape(p.full_name || '')}" required>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label small fw-bold">Course</label>
-                  <input type="text" class="form-control bg-light" value="${this.escape(p.course || '')}" readonly disabled>
-                </div>
 
-                ${isAlumni ? `
+                ${isAdminOrFaculty ? `
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Educational Qualification <span class="text-danger">*</span></label>
+                    <input type="text" id="prof-education" class="form-control" value="${this.escape(p.education_qualification || 'Ph.D / M.Tech in Computer Science & IT')}" placeholder="e.g. Ph.D, M.Tech (CSE), MCA" required>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">Technical Skills & Areas of Expertise (comma-separated)</label>
+                    <input type="text" id="prof-skills" class="form-control font-monospace" placeholder="e.g. Python, Cloud Infrastructure, Machine Learning, Database Architecture, System Design" value="${this.escape(p.skills || '')}">
+                  </div>
+                ` : isAlumni ? `
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Course</label>
+                    <input type="text" class="form-control bg-light" value="${this.escape(p.course || '')}" readonly disabled>
+                  </div>
                   <div class="col-md-6">
                     <label class="form-label small fw-bold">Current Company</label>
                     <input type="text" id="prof-company" class="form-control" value="${this.escape(p.current_company || '')}" placeholder="e.g. Microsoft, Amazon, Infosys">
@@ -1758,7 +1882,19 @@ const App = {
                     <input type="number" id="prof-grad-year" class="form-control" min="1980" max="2045" value="${p.graduation_year || 2023}" placeholder="e.g. 2024 (any past/future year)">
                     <small class="text-muted" style="font-size: 0.72rem;">Accepts any past or upcoming graduation year.</small>
                   </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">About & Professional Bio</label>
+                    <textarea id="prof-bio" class="form-control" rows="3" placeholder="Briefly describe your career journey, tech passion, and how you want to connect with CMS students/alumni...">${this.escape(p.bio || '')}</textarea>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">Technical Skills (comma-separated)</label>
+                    <input type="text" id="prof-skills" class="form-control font-monospace" placeholder="e.g. Python, FastAPI, React, PostgreSQL, Docker, AWS" value="${this.escape(p.skills || '')}">
+                  </div>
                 ` : `
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Course</label>
+                    <input type="text" class="form-control bg-light" value="${this.escape(p.course || '')}" readonly disabled>
+                  </div>
                   <div class="col-md-6">
                     <label class="form-label small fw-bold">Current Semester</label>
                     <input type="number" id="prof-semester" class="form-control" min="1" max="8" value="${p.current_semester || 4}">
@@ -1767,17 +1903,15 @@ const App = {
                     <label class="form-label small fw-bold">CGPA</label>
                     <input type="text" id="prof-cgpa" class="form-control" placeholder="e.g. 8.7" value="${p.cgpa || ''}">
                   </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">About & Professional Bio</label>
+                    <textarea id="prof-bio" class="form-control" rows="3" placeholder="Briefly describe your tech passion, interests, and career goals...">${this.escape(p.bio || '')}</textarea>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label small fw-bold">Technical Skills (comma-separated)</label>
+                    <input type="text" id="prof-skills" class="form-control font-monospace" placeholder="e.g. Python, FastAPI, React, PostgreSQL, Docker, AWS" value="${this.escape(p.skills || '')}">
+                  </div>
                 `}
-
-                <div class="col-12">
-                  <label class="form-label small fw-bold">About & Professional Bio</label>
-                  <textarea id="prof-bio" class="form-control" rows="3" placeholder="Briefly describe your career journey, tech passion, and how you want to connect with CMS students/alumni...">${this.escape(p.bio || '')}</textarea>
-                </div>
-
-                <div class="col-12">
-                  <label class="form-label small fw-bold">Technical Skills (comma-separated)</label>
-                  <input type="text" id="prof-skills" class="form-control font-monospace" placeholder="e.g. Python, FastAPI, React, PostgreSQL, Docker, AWS" value="${this.escape(p.skills || '')}">
-                </div>
 
                 <!-- SECTION: DYNAMIC PORTFOLIO & SOCIAL LINKS WITH LIVE LOGO FETCH -->
                 <div class="col-12 mt-4">
@@ -1959,8 +2093,9 @@ const App = {
 
   async saveProfileDetails(e) {
     e.preventDefault();
-    const isAlumni = this.currentUser.role === "alumni";
-    const endpoint = isAlumni ? "/api/alumni/profile" : "/api/students/profile";
+    const role = this.currentUser.role;
+    const isAdminOrFaculty = ["super_admin", "admin", "faculty"].includes(role);
+    const isAlumni = role === "alumni";
 
     // Collect dynamic links
     const linkRows = document.querySelectorAll("#dynamic-links-container [data-link-row]");
@@ -1986,8 +2121,7 @@ const App = {
 
     const payload = {
       full_name: document.getElementById("prof-name").value.trim(),
-      bio: document.getElementById("prof-bio").value.trim(),
-      skills: document.getElementById("prof-skills").value.trim(),
+      skills: document.getElementById("prof-skills")?.value.trim() || "",
       custom_links: JSON.stringify(links),
       github_url: githubUrl,
       linkedin_url: linkedinUrl,
@@ -1995,7 +2129,10 @@ const App = {
       portfolio_url: portfolioUrl
     };
 
-    if (isAlumni) {
+    if (isAdminOrFaculty) {
+      payload.education_qualification = document.getElementById("prof-education")?.value.trim() || "";
+    } else if (isAlumni) {
+      payload.bio = document.getElementById("prof-bio")?.value.trim() || "";
       payload.current_company = document.getElementById("prof-company")?.value.trim() || "";
       payload.current_job_title = document.getElementById("prof-job-title")?.value.trim() || "";
       payload.current_city = document.getElementById("prof-city")?.value.trim() || "";
@@ -2004,21 +2141,23 @@ const App = {
       payload.is_mentor = document.getElementById("prof-is-mentor")?.checked || false;
       payload.is_referral_provider = document.getElementById("prof-is-referral")?.checked || false;
     } else {
+      payload.bio = document.getElementById("prof-bio")?.value.trim() || "";
       payload.current_semester = parseInt(document.getElementById("prof-semester")?.value || 4);
       const cgpaVal = document.getElementById("prof-cgpa")?.value.trim();
       if (cgpaVal) payload.cgpa = parseFloat(cgpaVal);
     }
 
+    const endpoint = isAlumni ? "/api/alumni/profile" : (isAdminOrFaculty ? "/api/users/profile" : "/api/students/profile");
     const btn = document.getElementById("btn-save-profile");
     if (btn) btn.disabled = true;
 
     try {
       const res = await API.put(endpoint, payload);
-      this.showToast(res.message, "success");
+      this.showToast(res.message || "Profile updated successfully!", "success");
       await this.checkAuth();
       this.renderProfile();
     } catch (err) {
-      this.showToast(err.message, "danger");
+      this.showToast(err.message || "Failed to save profile.", "danger");
     } finally {
       if (btn) btn.disabled = false;
     }

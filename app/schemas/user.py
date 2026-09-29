@@ -24,6 +24,7 @@ class StudentProfileRead(BaseModel):
     portfolio_url: Optional[str] = None
     custom_links: Optional[str] = None
     skills: Optional[str] = None
+    education_qualification: Optional[str] = None
     verification_status: str
     show_email: bool
     show_phone: bool
@@ -44,6 +45,7 @@ class StudentProfileUpdate(BaseModel):
     portfolio_url: Optional[str] = None
     custom_links: Optional[str] = None
     skills: Optional[str] = None
+    education_qualification: Optional[str] = None
     show_email: Optional[bool] = None
     show_phone: Optional[bool] = None
 
@@ -119,6 +121,7 @@ class AlumniProfileRead(BaseModel):
     portfolio_url: Optional[str] = None
     custom_links: Optional[str] = None
     skills: Optional[str] = None
+    education_qualification: Optional[str] = None
     is_mentor: bool = True
     is_referral_provider: bool = True
     is_co_guide: bool = False
@@ -155,6 +158,7 @@ class AlumniProfileUpdate(BaseModel):
     portfolio_url: Optional[str] = None
     custom_links: Optional[str] = None
     skills: Optional[str] = None
+    education_qualification: Optional[str] = None
     is_mentor: Optional[bool] = None
     is_referral_provider: Optional[bool] = None
     is_co_guide: Optional[bool] = None

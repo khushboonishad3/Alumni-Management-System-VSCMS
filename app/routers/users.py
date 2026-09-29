@@ -384,21 +384,45 @@ def get_student_detail(
     }
 
 @router.put("/students/profile")
+@router.put("/users/profile")
+@router.put("/profile")
 def update_student_profile(
     data: StudentProfileUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    if current_user.role == UserRole.ALUMNI:
+        profile = db.query(AlumniProfile).filter(AlumniProfile.user_id == current_user.id).first()
+        if not profile:
+            raise HTTPException(status_code=404, detail="Alumni profile not found for this account.")
+        for key, val in data.model_dump(exclude_unset=True).items():
+            if hasattr(profile, key) and val is not None:
+                setattr(profile, key, val)
+        db.commit()
+        db.refresh(profile)
+        log_audit_event(db, "UPDATE_PROFILE", current_user.id, "AlumniProfile", profile.id, None, "Updated alumni profile")
+        return {"message": "Profile updated successfully.", "profile_id": profile.id}
+
     profile = db.query(StudentProfile).filter(StudentProfile.user_id == current_user.id).first()
     if not profile:
-        raise HTTPException(status_code=404, detail="Student profile not found for this account.")
+        profile = StudentProfile(
+            user_id=current_user.id,
+            full_name=data.full_name or current_user.email.split("@")[0].capitalize(),
+            course="N/A",
+            enrollment_no=f"INST-{current_user.id}",
+            roll_no=f"ROL-{current_user.id}",
+            verification_status=VerificationStatus.VERIFIED
+        )
+        db.add(profile)
+        db.flush()
     
     for key, val in data.model_dump(exclude_unset=True).items():
-        setattr(profile, key, val)
+        if hasattr(profile, key) and val is not None:
+            setattr(profile, key, val)
         
     db.commit()
     db.refresh(profile)
-    log_audit_event(db, "UPDATE_PROFILE", current_user.id, "StudentProfile", profile.id, None, "Updated student profile")
+    log_audit_event(db, "UPDATE_PROFILE", current_user.id, "StudentProfile", profile.id, None, "Updated profile")
     return {"message": "Profile updated successfully."}
 
 @router.post("/upload/avatar")

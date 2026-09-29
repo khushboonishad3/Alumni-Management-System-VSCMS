@@ -262,8 +262,39 @@ def logout(response: Response, current_user: User = Depends(get_current_user), d
 
 @router.get("/me")
 def get_me(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    import json
     profile_data = {}
-    if current_user.role == UserRole.ALUMNI and current_user.alumni_profile:
+    if current_user.role in [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.FACULTY]:
+        sp = current_user.student_profile
+        full_name = sp.full_name if sp else (
+            "Dr. R. K. Srivastava" if current_user.role == UserRole.FACULTY else
+            "CMS Super Administrator" if current_user.role == UserRole.SUPER_ADMIN else
+            "CMS Portal Administrator"
+        )
+        edu = getattr(sp, "education_qualification", None) if sp else None
+        if not edu:
+            edu = "Ph.D in Computer Applications" if current_user.role == UserRole.FACULTY else "M.Tech / Ph.D in Computer Science & IT"
+            
+        skills = sp.skills if (sp and sp.skills) else "Institutional Administration, IT Architecture, Cloud Computing, Database Systems"
+        links = sp.custom_links if (sp and sp.custom_links) else json.dumps([
+            {"platform": "LinkedIn", "url": "https://linkedin.com/school/cmskanpur"},
+            {"platform": "GitHub", "url": "https://github.com/cmskanpur"}
+        ])
+        profile_data = {
+            "id": sp.id if sp else current_user.id,
+            "full_name": full_name,
+            "education_qualification": edu,
+            "skills": skills,
+            "avatar_url": sp.avatar_url if sp else None,
+            "github_url": sp.github_url if sp else "https://github.com/cmskanpur",
+            "linkedin_url": sp.linkedin_url if sp else "https://linkedin.com/school/cmskanpur",
+            "leetcode_url": sp.leetcode_url if sp else None,
+            "portfolio_url": sp.portfolio_url if sp else None,
+            "custom_links": links,
+            "verification_status": "verified",
+            "verification_notes": "Official Institutional Authority - CMS Kanpur"
+        }
+    elif current_user.role == UserRole.ALUMNI and current_user.alumni_profile:
         p = current_user.alumni_profile
         profile_data = {
             "id": p.id,
@@ -277,6 +308,7 @@ def get_me(current_user: User = Depends(get_current_user), db: Session = Depends
             "bio": p.bio,
             "avatar_url": p.avatar_url,
             "skills": p.skills,
+            "education_qualification": getattr(p, "education_qualification", None) or f"{p.course} ({p.batch_year} - {p.graduation_year})",
             "github_url": p.github_url,
             "linkedin_url": p.linkedin_url,
             "leetcode_url": p.leetcode_url,
@@ -325,6 +357,7 @@ def get_me(current_user: User = Depends(get_current_user), db: Session = Depends
             "avatar_url": p.avatar_url,
             "resume_url": p.resume_url,
             "skills": p.skills,
+            "education_qualification": getattr(p, "education_qualification", None) or f"Pursuing {p.course} ({p.batch_year} - {p.batch_year + 3})",
             "github_url": p.github_url,
             "linkedin_url": p.linkedin_url,
             "leetcode_url": p.leetcode_url,

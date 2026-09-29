@@ -32,11 +32,17 @@ def get_projects(
     projects = query.order_by(IndustryProject.created_at.desc()).all()
     results = []
     for p in projects:
-        creator_name = "CMS Alumnus"
-        company = ""
+        creator_name = "CMS Member"
+        company = "CMS Kanpur"
         if p.creator and p.creator.alumni_profile:
             creator_name = p.creator.alumni_profile.full_name
-            company = p.creator.alumni_profile.current_company
+            company = p.creator.alumni_profile.current_company or "CMS Alumnus"
+        elif p.creator and p.creator.student_profile:
+            creator_name = p.creator.student_profile.full_name
+            company = "CMS Faculty" if p.creator.role == UserRole.FACULTY else "CMS Administration"
+        elif p.creator:
+            creator_name = p.creator.email.split("@")[0].capitalize()
+            company = "CMS Administration" if p.creator.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN] else ("CMS Faculty" if p.creator.role == UserRole.FACULTY else "CMS Kanpur")
             
         results.append({
             "id": p.id,
@@ -68,11 +74,17 @@ def get_project_detail(
     if not p:
         raise HTTPException(status_code=404, detail="Project problem statement not found.")
         
-    creator_name = "CMS Alumnus"
-    company = ""
+    creator_name = "CMS Member"
+    company = "CMS Kanpur"
     if p.creator and p.creator.alumni_profile:
         creator_name = p.creator.alumni_profile.full_name
-        company = p.creator.alumni_profile.current_company
+        company = p.creator.alumni_profile.current_company or "CMS Alumnus"
+    elif p.creator and p.creator.student_profile:
+        creator_name = p.creator.student_profile.full_name
+        company = "CMS Faculty" if p.creator.role == UserRole.FACULTY else "CMS Administration"
+    elif p.creator:
+        creator_name = p.creator.email.split("@")[0].capitalize()
+        company = "CMS Administration" if p.creator.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN] else ("CMS Faculty" if p.creator.role == UserRole.FACULTY else "CMS Kanpur")
         
     return {
         "id": p.id,

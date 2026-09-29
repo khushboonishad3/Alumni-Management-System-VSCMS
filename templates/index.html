@@ -666,7 +666,12 @@
       <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
         <div>
           <h3 class="fw-bold text-dark mb-1">Industry Problem Statements & Co-Guidance</h3>
-          <p class="text-muted small mb-0">Real-world production challenges curated by CMS alumni for BCA and MCA final year capstone projects.</p>
+          <p class="text-muted small mb-0">Real-world production challenges curated by CMS alumni, faculty, and administrators for BCA and MCA final year capstone projects.</p>
+        </div>
+        <div id="project-action-buttons">
+          <button class="btn btn-primary-cms btn-sm" id="btn-open-create-proj" onclick="App.openCreateProjectModal()">
+            <i class="bi bi-plus-circle me-1"></i> Post Industry Problem Statement
+          </button>
         </div>
       </div>
       <div class="row" id="projects-grid">
@@ -682,6 +687,11 @@
         <div>
           <h3 class="fw-bold text-dark mb-1">Technical Resource Repository</h3>
           <p class="text-muted small mb-0">Curated DSA roadmaps, production architectures, SQL cheat sheets, and placement preparation archives.</p>
+        </div>
+        <div id="resource-action-buttons">
+          <button class="btn btn-primary-cms btn-sm" id="btn-open-create-res" onclick="App.openCreateResourceModal()">
+            <i class="bi bi-cloud-arrow-up me-1"></i> Share Technical Resource
+          </button>
         </div>
       </div>
 
@@ -1210,6 +1220,137 @@
           </div>
           <button class="btn btn-primary-cms w-100" onclick="App.submitProjectProposal()">Submit for Faculty & Alumni Review</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Post Industry Problem Statement Modal -->
+  <div class="modal fade" id="modal-create-project" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+        <div class="modal-header bg-dark text-white border-0">
+          <h5 class="modal-title fw-bold"><i class="bi bi-folder-plus text-primary me-2"></i>Post Industry Problem Statement</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form onsubmit="App.submitCreateProject(event)">
+          <div class="modal-body p-4">
+            <p class="text-muted small mb-3">Share real-world engineering problem statements for CMS BCA and MCA students to build capstone solutions under your guidance.</p>
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label small fw-bold">Project Title <span class="text-danger">*</span></label>
+                <input type="text" id="new-proj-title" class="form-control" placeholder="e.g. Distributed Event Streaming Pipeline with Kafka & FastAPI" required minlength="5">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Domain <span class="text-danger">*</span></label>
+                <select id="new-proj-domain" class="form-select">
+                  <option value="Web Development / Cloud Architecture">Web Development / Cloud Architecture</option>
+                  <option value="AI / Machine Learning / Data Engineering">AI / Machine Learning / Data Engineering</option>
+                  <option value="Cyber Security / DevSecOps">Cyber Security / DevSecOps</option>
+                  <option value="Mobile App Development">Mobile App Development</option>
+                  <option value="Distributed Systems & Microservices">Distributed Systems & Microservices</option>
+                  <option value="Enterprise IT & ERP Systems">Enterprise IT & ERP Systems</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Difficulty Level <span class="text-danger">*</span></label>
+                <select id="new-proj-difficulty" class="form-select">
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate" selected>Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Expected Duration (Weeks) <span class="text-danger">*</span></label>
+                <input type="number" id="new-proj-duration" class="form-control" min="2" max="24" value="8" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Max Student Team Size <span class="text-danger">*</span></label>
+                <input type="number" id="new-proj-students" class="form-control" min="1" max="10" value="4" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Required Tech Stack (comma-separated) <span class="text-danger">*</span></label>
+                <input type="text" id="new-proj-tech" class="form-control font-monospace" placeholder="e.g. Python, FastAPI, PostgreSQL, Docker, Redis" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Problem Statement & Requirements <span class="text-danger">*</span></label>
+                <textarea id="new-proj-desc" class="form-control" rows="4" placeholder="Detail the business context, architectural challenges, and functional requirements for student teams..." required minlength="15"></textarea>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Expected Production Outcome</label>
+                <input type="text" id="new-proj-outcome" class="form-control" placeholder="e.g. Deployed microservice with Swagger docs, 85%+ test coverage, and benchmark report">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer bg-light border-0">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" id="btn-submit-create-proj" class="btn btn-vscms-maroon px-4 fw-bold">
+              <i class="bi bi-check-circle me-1"></i> Post Problem Statement
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Technical Resource Modal -->
+  <div class="modal fade" id="modal-create-resource" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+        <div class="modal-header bg-dark text-white border-0">
+          <h5 class="modal-title fw-bold"><i class="bi bi-cloud-arrow-up text-primary me-2"></i>Share Technical Resource</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form onsubmit="App.submitCreateResource(event)">
+          <div class="modal-body p-4">
+            <p class="text-muted small mb-3">Publish high-value study materials, interview prep sheets, and production codebases for CMS students & alumni.</p>
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label small fw-bold">Resource Title <span class="text-danger">*</span></label>
+                <input type="text" id="new-res-title" class="form-control" placeholder="e.g. Complete SDE DSA Sheet & System Design Handbook" required minlength="3">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Category <span class="text-danger">*</span></label>
+                <select id="new-res-category" class="form-select" required>
+                  <option value="1">Data Structures & Algorithms</option>
+                  <option value="2">System Design & Cloud</option>
+                  <option value="3">Full-Stack Development</option>
+                  <option value="4">Database & SQL Mastery</option>
+                  <option value="5">DevOps & CI/CD Pipelines</option>
+                  <option value="6">Placement & Interview Prep</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">Resource Type <span class="text-danger">*</span></label>
+                <select id="new-res-type" class="form-select">
+                  <option value="PDF Document">PDF Document</option>
+                  <option value="GitHub Repository">GitHub Repository</option>
+                  <option value="Roadmap Guide">Roadmap Guide</option>
+                  <option value="Cheat Sheet">Cheat Sheet</option>
+                  <option value="Video / Course">Video / Course</option>
+                  <option value="Tool / Starter Kit">Tool / Starter Kit</option>
+                </select>
+              </div>
+              <div class="col-md-8">
+                <label class="form-label small fw-bold">External Resource / Repository Link <span class="text-danger">*</span></label>
+                <input type="url" id="new-res-link" class="form-control" placeholder="https://github.com/... or https://drive.google.com/..." required>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Tags (comma-separated)</label>
+                <input type="text" id="new-res-tags" class="form-control" placeholder="e.g. BCA, MCA, LeetCode, Striver SDE, Python, Docker" value="BCA, MCA, Technical">
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Description & Context</label>
+                <textarea id="new-res-desc" class="form-control" rows="3" placeholder="Briefly describe what this resource contains and how CMS students & alumni can use it..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer bg-light border-0">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" id="btn-submit-create-res" class="btn btn-vscms-maroon px-4 fw-bold">
+              <i class="bi bi-check-circle me-1"></i> Publish Resource
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

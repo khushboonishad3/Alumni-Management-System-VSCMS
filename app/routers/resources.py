@@ -50,11 +50,15 @@ def get_resources(
     resources = query.order_by(TechnicalResource.created_at.desc()).all()
     results = []
     for r in resources:
-        uploader_name = "CMS Alumnus"
+        uploader_name = "CMS Member"
         if r.uploader and r.uploader.alumni_profile:
-            uploader_name = r.uploader.alumni_profile.full_name
+            uploader_name = f"{r.uploader.alumni_profile.full_name} (Alumnus)"
         elif r.uploader and r.uploader.student_profile:
-            uploader_name = r.uploader.student_profile.full_name
+            role_label = "Faculty" if r.uploader.role == UserRole.FACULTY else "Student"
+            uploader_name = f"{r.uploader.student_profile.full_name} ({role_label})"
+        elif r.uploader:
+            role_label = "Administrator" if r.uploader.role in [UserRole.ADMIN, UserRole.SUPER_ADMIN] else "CMS Faculty"
+            uploader_name = f"{r.uploader.email.split('@')[0].capitalize()} ({role_label})"
             
         results.append({
             "id": r.id,

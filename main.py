@@ -27,6 +27,20 @@ async def lifespan(app: FastAPI):
     try:
         Base.metadata.create_all(bind=engine)
         seed_database()
+        with engine.connect() as conn:
+            import sqlalchemy as sa
+            for tbl in ["student_profiles", "alumni_profiles"]:
+                try:
+                    if "sqlite" in str(engine.url):
+                        cols = [row[1] for row in conn.execute(sa.text(f"PRAGMA table_info({tbl})")).fetchall()]
+                        if "education_qualification" not in cols:
+                            conn.execute(sa.text(f"ALTER TABLE {tbl} ADD COLUMN education_qualification VARCHAR(255);"))
+                            conn.commit()
+                    else:
+                        conn.execute(sa.text(f"ALTER TABLE {tbl} ADD COLUMN IF NOT EXISTS education_qualification VARCHAR(255);"))
+                        conn.commit()
+                except Exception as col_err:
+                    print(f"[COLUMN MIGRATION NOTICE - {tbl}] {col_err}")
     except Exception as e:
         print(f"[STARTUP DB INITIALIZATION WARNING] {e}")
     yield

@@ -2,6 +2,51 @@
 
 > Production-ready Alumni Management, Developer Networking, Mentorship, Internal Placement Referrals, and Capstone Collaboration Ecosystem for **Dr. Virendra Swarup College of Management Studies (CMS Kanpur)**.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-blue?style=for-the-badge&logo=vercel)](https://alumnimanagementsystemvscms.vercel.app/)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
+[![PostgreSQL](https://img.shields.io/badge/Database-Neon%20Postgres-336791?style=for-the-badge&logo=postgresql)](https://neon.tech)
+[![Python 3.14](https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge&logo=python)](https://python.org)
+
+🚀 **Live Working Platform**: [https://alumnimanagementsystemvscms.vercel.app/](https://alumnimanagementsystemvscms.vercel.app/)
+
+---
+
+## ⚡ Quick Start: Demo Login Accounts
+
+Test the live deployment immediately using these pre-seeded institutional accounts:
+
+| Role | Email | Password | Access Scope & Highlights |
+| :--- | :--- | :--- | :--- |
+| **Super Admin** | `superadmin@cmskanpur.edu.in` | `Admin@CMS2025` | Full system control, role elevation, create projects & resources, audit logs |
+| **Admin** | `admin@cmskanpur.edu.in` | `Admin@CMS2025` | User management, post industry projects, share technical resources, jobs |
+| **Faculty** | `faculty.cs@cmskanpur.edu.in` | `Faculty@CMS2025` | Student verification queue, post capstones, share technical resources, analytics |
+| **Alumni (Microsoft)**| `aarav.sharma@microsoft.com` | `Alumni@CMS2025` | Post jobs & referrals, post industry projects, share resources, mentorship |
+| **Alumni (Amazon)** | `priya.verma@amazon.com` | `Alumni@CMS2025` | Referral requests, mock interviews, 1-on-1 mentorship, publish resources |
+| **Student (BCA)** | `aditya.tiwari@cmskanpur.edu.in` | `Student@CMS2025` | Request referrals, submit project proposals, book mentorship, download resources |
+| **Student (MCA)** | `ritu.yadav@cmskanpur.edu.in` | `Student@CMS2025` | Universal search, event RSVPs, project proposals |
+
+---
+
+## 🛠️ Recent Deployments & Architectural Upgrades
+
+The platform includes the following latest architectural and user experience improvements:
+
+1. **Live Vercel Production Deployment**:
+   - Live URL: [https://alumnimanagementsystemvscms.vercel.app/](https://alumnimanagementsystemvscms.vercel.app/)
+   - Integrated custom `VercelASGIPathMiddleware` and route rewrites to support clean Single-Page Application (SPA) path handling and backend REST API routing under serverless execution.
+2. **Neon Serverless PostgreSQL Integration**:
+   - Production database powered by cloud serverless PostgreSQL (`Neon.tech`) with resilient multi-driver fallback (`pg8000` / `psycopg2-binary`).
+   - Dynamic zero-downtime startup schema synchronization ensuring columns and indices match declarative models.
+3. **Tailored Role-Specific Profiles**:
+   - **Super Admin, Admin, and Faculty**: Student-specific fields (`course`, `current_semester`, `cgpa`, and `about/bio`) have been removed from both backend API payloads and frontend profile dashboards.
+   - Replaced with dedicated professional fields: **Full Name**, **Educational Qualification** (e.g., M.Tech, Ph.D., MCA), **Technical Skills**, and **Professional & Development Profiles** (dynamic links for GitHub, LinkedIn, Google Scholar, ResearchGate, personal sites).
+   - Students and Alumni retain specialized academic and industry career profiles.
+4. **Decentralized Project & Resource Creation**:
+   - **Industry Projects (Capstone Problem Statements)**: Super Admin, Admin, Faculty, and Alumni can now all post real-world problem statements with tech stacks, difficulty levels, duration, and maximum team sizes.
+   - **Technical Resource Library**: Super Admin, Admin, Faculty, and Alumni can now all upload and publish curated technical study materials, DSA cheat sheets, architecture blueprints, and repositories.
+5. **Streamlined Pure Email/Password Authentication**:
+   - Removed captcha friction while preserving strong password hashing (PBKDF2-HMAC-SHA256), JWT token issuance, RBAC checks, and audit logging.
+
 ---
 
 ## 1. Project Overview
@@ -198,10 +243,10 @@ Key Endpoint Groups:
 | Role | Core Purpose & Scope | Key Capabilities & Post Permissions |
 | :--- | :--- | :--- |
 | **Student** | Active BCA & MCA students seeking career acceleration | • Explores verified alumni directory<br>• Views complete job descriptions & candidate requirements<br>• Applies to jobs & requests internal employee referrals<br>• Books 1-on-1 mentorship & coding mock interviews<br>• Submits industry capstone project proposals<br>• Registers/RSVPs for hackathons & tech events *(Cannot post jobs/events)* |
-| **Alumni** | Verified graduates working across global tech firms | • Maintains developer portfolio (experience, GitHub, LeetCode)<br>• **Posts Job & Internship Openings** (`+ Post Opportunity`) with employee referral support<br>• **Hosts Webinars, Masterclasses & Hackathons** (`+ Host Event / Hackathon`)<br>• Provides 1-on-1 mentorship, DSA coaching & resume reviews<br>• Posts industry capstone problem statements |
-| **Faculty** | BCA/MCA professors, HODs & academic coordinators | • Reviews & approves/rejects pending student and alumni verifications<br>• Views institutional placement analytics & cohort distribution charts<br>• **Posts Academic Internships & Research Fellowships**<br>• **Organizes Departmental Workshops, Tech Fests & Guest Lectures**<br>• Uploads syllabus technical notes & question banks<br>• Co-guides industry capstone proposals |
-| **Admin** | College IT administrators & Placement (T&P) officers | • Day-to-day community moderation & operational governance<br>• **User Account Administration**: Activates or suspends user accounts<br>• **Broadcasts College Newsletters** with automated in-app alerts<br>• **Inspects Security & Operational Audit Logs**<br>• **Posts Campus Placement Drives & Corporate Tie-ups**<br>• Full moderation over jobs, resources, and events *(Cannot alter user roles)* |
-| **Super Admin** | Director, Principal or Lead System Architect | • **Root System Authority** & institutional configuration<br>• **Exclusive User Role Elevation** (`PUT /api/admin/users/{id}/role`): Promotes/demotes users between Student, Alumni, Faculty, and Admin<br>• **Protected Immunity**: Cannot be deactivated or suspended by regular Admins<br>• Complete database, audit trail, and operational override powers |
+| **Alumni** | Verified graduates working across global tech firms | • Maintains developer portfolio (experience, GitHub, LeetCode)<br>• **Posts Job & Internship Openings** (`+ Post Opportunity`) with employee referral support<br>• **Hosts Webinars, Masterclasses & Hackathons** (`+ Host Event / Hackathon`)<br>• **Posts Industry Problem Statements** (`+ Post Problem Statement`)<br>• **Shares Technical Resources** (`+ Share Technical Resource`)<br>• Provides 1-on-1 mentorship, DSA coaching & resume reviews |
+| **Faculty** | BCA/MCA professors, HODs & academic coordinators | • Customized profile displaying Educational Qualification & Technical Skills<br>• Reviews & approves pending student and alumni verifications<br>• Views institutional placement analytics & cohort distribution charts<br>• **Posts Industry Problem Statements & Capstone Projects**<br>• **Publishes Technical Resources & Study Guides**<br>• **Posts Academic Internships & Research Fellowships**<br>• Organizes departmental workshops, tech fests & guest lectures |
+| **Admin** | College IT administrators & Placement (T&P) officers | • Tailored profile displaying Educational Qualification & Technical Skills<br>• Day-to-day community moderation & operational governance<br>• **User Account Administration**: Activates or suspends user accounts<br>• **Posts Industry Problem Statements & Technical Resources**<br>• Broadcasts college newsletters with automated in-app alerts<br>• Inspects security & operational audit logs<br>• Posts campus placement drives & corporate tie-ups |
+| **Super Admin** | Director, Principal or Lead System Architect | • **Root System Authority** & institutional configuration<br>• **Exclusive User Role Elevation** (`PUT /api/admin/users/{id}/role`): Promotes/demotes users between Student, Alumni, Faculty, and Admin<br>• **Posts Industry Projects & Technical Resources**<br>• Protected immunity against deactivation<br>• Complete database, audit trail, and operational override powers |
 
 ---
 
@@ -259,7 +304,7 @@ Run the full pytest suite:
 python -m pytest tests/test_api.py -v
 ```
 
-All 18 automated test cases validate authentication, institutional auto-verification, alumni multi-filter search, referral workflows, mentorship, and security boundaries.
+All 19 automated test cases validate authentication, role-tailored profile serialization, project and resource creation across faculty/alumni/admin roles, institutional auto-verification, alumni multi-filter search, referral workflows, mentorship, and security boundaries.
 
 ---
 

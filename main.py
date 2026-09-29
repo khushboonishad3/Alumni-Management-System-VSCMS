@@ -48,7 +48,7 @@ app.add_middleware(
 
 # Mount Static & Media files safely using resolved paths
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-static_dir = os.path.join(BASE_PATH, "static")
+static_dir = os.path.join(BASE_PATH, "public", "static") if os.path.exists(os.path.join(BASE_PATH, "public", "static")) else os.path.join(BASE_PATH, "static")
 media_dir = os.path.join(BASE_PATH, "media")
 
 if os.path.exists(static_dir):

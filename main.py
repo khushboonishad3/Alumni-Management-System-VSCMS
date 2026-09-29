@@ -37,10 +37,10 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS Middleware
+# CORS Middleware (Support credentials on all origins including Vercel domain)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origin_regex=r"^https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -61,10 +61,16 @@ if os.path.exists(media_dir):
 async def vercel_routing_middleware(request: Request, call_next):
     raw_path = request.scope.get("path", "")
     if raw_path in ["/main.py", "/main", "/api/index", "/api/index.py"] or raw_path.startswith(("/main.py/", "/api/index/")):
-        matched = request.headers.get("x-matched-path") or request.headers.get("x-forwarded-uri")
-        if matched and not matched.startswith(("/main.py", "/api/index")):
-            clean_path = matched.split("?")[0]
-            request.scope["path"] = clean_path if clean_path else "/"
+        orig = (
+            request.headers.get("x-invoke-path")
+            or request.headers.get("x-forwarded-uri")
+            or request.headers.get("x-real-path")
+            or request.headers.get("x-matched-path")
+            or "/"
+        )
+        clean_path = orig.split("?")[0]
+        if clean_path and not clean_path.startswith(("/main.py", "/main", "/api/index")):
+            request.scope["path"] = clean_path
         else:
             request.scope["path"] = "/"
     return await call_next(request)

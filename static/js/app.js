@@ -2559,17 +2559,16 @@ const App = {
       if (spinner) spinner.classList.add("d-none");
       if (btnText) btnText.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> SIGN IN TO PORTAL';
 
+      console.error("Login failure details:", err);
       const errMsg = (err.message || "").toLowerCase();
-      if (errMsg.includes("captcha")) {
-        this.showAuthAlert("Captcha verification failed. Please try again.", "danger");
-      } else if (errMsg.includes("401") || errMsg.includes("password") || errMsg.includes("invalid") || errMsg.includes("credentials")) {
+      if (errMsg.includes("401") || errMsg.includes("password") || errMsg.includes("invalid") || errMsg.includes("credentials") || errMsg.includes("sign in")) {
         this.showAuthAlert("Unable to sign in. Please check your email/username and password.", "danger");
       } else if (errMsg.includes("awaiting") || errMsg.includes("verification")) {
         this.showAuthAlert("Your account is awaiting VSCMS verification.", "warning");
       } else if (errMsg.includes("suspend") || errMsg.includes("inactive")) {
         this.showAuthAlert("This account has been temporarily suspended. Please contact the administrator.", "danger");
       } else {
-        this.showAuthAlert("Unable to connect to the portal. Please try again shortly.", "danger");
+        this.showAuthAlert(err.message || "Unable to connect to the portal. Please try again shortly.", "danger");
       }
 
       this.refreshCaptcha();

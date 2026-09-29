@@ -178,23 +178,7 @@ def register(req: UserRegister, request: Request, response: Response, db: Sessio
 
 @router.post("/login", response_model=TokenResponse)
 def login(creds: UserLogin, request: Request, response: Response, db: Session = Depends(get_db)):
-    # 1. CAPTCHA verification (if captcha_id is supplied)
-    if creds.captcha_id:
-        clean_expired_captchas()
-        is_valid = verify_captcha_token(creds.captcha_id, creds.captcha_code or "")
-        if not is_valid:
-            stored = CAPTCHA_STORE.get(creds.captcha_id)
-            if stored and stored["code"].upper() == (creds.captcha_code or "").strip().upper():
-                is_valid = True
-                CAPTCHA_STORE.pop(creds.captcha_id, None)
-
-        if not is_valid:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Captcha verification failed. Please try again."
-            )
-
-    # 2. Search user by Email, or Roll No / Enrollment No
+    # 1. Search user by Email, or Roll No / Enrollment No
     clean_identifier = creds.email.strip().lower()
     user = db.query(User).filter(User.email == clean_identifier).first()
     if not user:

@@ -2517,18 +2517,10 @@ const App = {
     e.preventDefault();
     const identifier = document.getElementById("auth-login-identifier")?.value.trim() || "";
     const password = document.getElementById("auth-login-password")?.value || "";
-    const captchaCode = document.getElementById("auth-login-captcha")?.value.trim() || "";
-    const captchaId = document.getElementById("auth-login-captcha-id")?.value || "";
     const rememberMe = document.getElementById("auth-login-remember")?.checked || false;
 
     if (!identifier || !password) {
       this.showAuthAlert("Unable to sign in. Please check your email/username and password.", "danger");
-      return;
-    }
-
-    if (!captchaCode) {
-      this.showAuthAlert("Captcha verification failed. Please enter the captcha characters shown above.", "warning");
-      document.getElementById("auth-login-captcha")?.focus();
       return;
     }
 
@@ -2545,8 +2537,6 @@ const App = {
       const res = await API.post("/api/auth/login", {
         email: identifier,
         password: password,
-        captcha_id: captchaId,
-        captcha_code: captchaCode,
         remember_me: rememberMe
       });
 

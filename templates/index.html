@@ -226,30 +226,6 @@
                       </div>
                     </div>
 
-                    <!-- Captcha Verification -->
-                    <div class="mb-3 p-3 bg-light rounded-3 border">
-                      <label class="form-label small fw-bold text-dark d-flex align-items-center justify-content-between mb-2">
-                        <span><i class="bi bi-shield-check me-1 text-primary"></i> Captcha Verification</span>
-                        <span class="badge bg-secondary-subtle text-secondary" style="font-size: 0.7rem;">Security Check</span>
-                      </label>
-                      
-                      <div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
-                        <div id="auth-captcha-box" class="auth-captcha-visual shadow-sm" title="Security Captcha Visual">
-                          <!-- Injected SVG -->
-                          <div class="spinner-border spinner-border-sm text-secondary" role="status"></div>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 py-2 px-3 fw-semibold" id="auth-captcha-refresh-btn" onclick="App.refreshCaptcha()" title="Refresh Captcha">
-                          <i class="bi bi-arrow-clockwise"></i> Refresh captcha
-                        </button>
-                        <input type="hidden" id="auth-login-captcha-id" value="">
-                      </div>
-
-                      <div>
-                        <label for="auth-login-captcha" class="form-label small text-muted mb-1">Enter the text shown above</label>
-                        <input type="text" id="auth-login-captcha" class="form-control text-uppercase fw-bold" placeholder="Enter captcha code" maxlength="8" style="letter-spacing: 2px;" required autocomplete="off">
-                      </div>
-                    </div>
-
                     <!-- Remember Me & Forgot Password -->
                     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                       <div class="form-check">

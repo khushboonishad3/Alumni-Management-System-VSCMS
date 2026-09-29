@@ -1,11 +1,12 @@
 import os
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response, Depends, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 from app.config import settings
-from app.database import engine, Base
+from app.database import engine, Base, get_db
 from app.seed_data import seed_database
 from app.routers import (
     auth_router,
@@ -56,24 +57,37 @@ if os.path.exists(static_dir):
 if os.path.exists(media_dir):
     app.mount("/media", StaticFiles(directory=media_dir), name="media")
 
-# Vercel Serverless Path Unmasking Middleware
-@app.middleware("http")
-async def vercel_routing_middleware(request: Request, call_next):
-    raw_path = request.scope.get("path", "")
-    if raw_path in ["/main.py", "/main", "/api/index", "/api/index.py"] or raw_path.startswith(("/main.py/", "/api/index/")):
-        orig = (
-            request.headers.get("x-invoke-path")
-            or request.headers.get("x-forwarded-uri")
-            or request.headers.get("x-real-path")
-            or request.headers.get("x-matched-path")
-            or "/"
-        )
-        clean_path = orig.split("?")[0]
-        if clean_path and not clean_path.startswith(("/main.py", "/main", "/api/index")):
-            request.scope["path"] = clean_path
-        else:
-            request.scope["path"] = "/"
-    return await call_next(request)
+# Vercel Serverless Raw ASGI Path Correction Middleware
+class VercelASGIPathMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope.get("type") == "http":
+            path = scope.get("path", "")
+            if path in ["/main.py", "/main", "/api/index", "/api/index.py"] or path.startswith(("/main.py/", "/api/index/")):
+                headers = dict(scope.get("headers", []))
+                orig = (
+                    headers.get(b"x-invoke-path")
+                    or headers.get(b"x-forwarded-uri")
+                    or headers.get(b"x-original-uri")
+                    or headers.get(b"x-rewrite-url")
+                    or headers.get(b"x-real-path")
+                )
+                if orig:
+                    clean = orig.decode("utf-8", errors="ignore").split("?")[0]
+                    if clean and not clean.startswith(("/main.py", "/main", "/api/index")):
+                        scope["path"] = clean
+                        scope["raw_path"] = clean.encode("utf-8")
+                    else:
+                        scope["path"] = "/"
+                        scope["raw_path"] = b"/"
+                else:
+                    scope["path"] = "/"
+                    scope["raw_path"] = b"/"
+        await self.app(scope, receive, send)
+
+app.add_middleware(VercelASGIPathMiddleware)
 
 # Include Routers
 app.include_router(auth_router)
@@ -98,6 +112,20 @@ async def serve_index():
         with open(index_path, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     return HTMLResponse("<h1>CMS Kanpur Alumni Networking Platform Backend Active.</h1>")
+
+# Fail-safe POST login proxy in case any serverless proxy delivers requests to /main.py or /
+@app.post("/main.py")
+@app.post("/main")
+@app.post("/")
+async def fallback_post_login(request: Request, response: Response, db: Session = Depends(get_db)):
+    from app.routers.auth import login
+    from app.schemas.auth import UserLogin
+    try:
+        body = await request.json()
+        creds = UserLogin(**body)
+        return login(creds, request, response, db)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/health")
 def health_check():

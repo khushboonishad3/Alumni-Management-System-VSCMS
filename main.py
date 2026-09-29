@@ -58,6 +58,8 @@ if os.path.exists(media_dir):
     app.mount("/media", StaticFiles(directory=media_dir), name="media")
 
 # Vercel Serverless Raw ASGI Path Correction Middleware
+import urllib.parse
+
 class VercelASGIPathMiddleware:
     def __init__(self, app):
         self.app = app
@@ -65,6 +67,26 @@ class VercelASGIPathMiddleware:
     async def __call__(self, scope, receive, send):
         if scope.get("type") == "http":
             path = scope.get("path", "")
+
+            # 1. Check for __vpath__ query parameter set by Vercel rewrite
+            qs_bytes = scope.get("query_string", b"")
+            if qs_bytes:
+                qs = qs_bytes.decode("utf-8", errors="ignore")
+                parsed_qs = urllib.parse.parse_qs(qs)
+                if "__vpath__" in parsed_qs and parsed_qs["__vpath__"]:
+                    orig_path = parsed_qs["__vpath__"][0]
+                    clean_path = "/" + orig_path.lstrip("/")
+                    scope["path"] = clean_path
+                    scope["raw_path"] = clean_path.encode("utf-8")
+                    path = clean_path
+
+                    # Reconstruct query string without __vpath__
+                    clean_qs_params = [
+                        (k, v) for k, values in parsed_qs.items() if k != "__vpath__" for v in values
+                    ]
+                    scope["query_string"] = urllib.parse.urlencode(clean_qs_params).encode("utf-8")
+
+            # 2. Fallback to check invoke headers if path is still /main.py or empty
             if path in ["/main.py", "/main", "/api/index", "/api/index.py"] or path.startswith(("/main.py/", "/api/index/")):
                 headers = dict(scope.get("headers", []))
                 orig = (
@@ -85,6 +107,7 @@ class VercelASGIPathMiddleware:
                 else:
                     scope["path"] = "/"
                     scope["raw_path"] = b"/"
+
         await self.app(scope, receive, send)
 
 app.add_middleware(VercelASGIPathMiddleware)

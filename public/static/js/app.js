@@ -31,17 +31,21 @@ const App = {
 
     try {
       const data = await API.get("/api/auth/me");
-      this.currentUser = data;
-      API.setUser(data);
-      this.updateAuthUI();
-      this.fetchNotifications();
-      this.checkAndShowProfilePrompt();
+      if (data && typeof data === "object" && (data.user_id || data.email)) {
+        this.currentUser = data;
+        API.setUser(data);
+        this.updateAuthUI();
+        if (typeof this.fetchNotifications === "function") this.fetchNotifications();
+        if (typeof this.checkAndShowProfilePrompt === "function") this.checkAndShowProfilePrompt();
+      }
     } catch (err) {
       console.warn("Auth check failed:", err.message);
-      API.setToken(null);
-      API.setUser(null);
-      this.currentUser = null;
-      this.updateAuthUI();
+      if (err.message && (err.message.includes("401") || err.message.includes("unauthorized") || err.message.includes("credentials"))) {
+        API.setToken(null);
+        API.setUser(null);
+        this.currentUser = null;
+        this.updateAuthUI();
+      }
     }
   },
 
@@ -74,10 +78,10 @@ const App = {
       const userRoleBadge = document.getElementById("user-role-badge");
       const userAvatar = document.getElementById("user-nav-avatar");
 
-      const name = this.currentUser.profile?.full_name || this.currentUser.email.split("@")[0];
+      const name = this.currentUser.profile?.full_name || this.currentUser.full_name || (this.currentUser.email ? this.currentUser.email.split("@")[0] : "User");
       if (userNameEl) userNameEl.innerText = name;
       if (topUserName) topUserName.innerText = name;
-      if (userEmailEl) userEmailEl.innerText = this.currentUser.email;
+      if (userEmailEl) userEmailEl.innerText = this.currentUser.email || "";
 
       const roleBadgeClass = this.currentUser.role === "alumni" ? "bg-primary text-white" :
         this.currentUser.role === "student" ? "bg-info text-dark" : "bg-warning text-dark";
@@ -2541,18 +2545,31 @@ const App = {
       });
 
       API.setToken(res.access_token);
+      this.currentUser = {
+        user_id: res.user_id,
+        email: res.email,
+        role: res.role,
+        full_name: res.full_name,
+        is_verified: res.is_verified,
+        profile: { full_name: res.full_name }
+      };
+      API.setUser(this.currentUser);
+      this.updateAuthUI();
+
       this.showAuthAlert(`Access Granted. Welcome back, ${res.full_name}! Redirecting to your dashboard...`, "success");
 
-      await this.checkAuth();
-
-      // Role-based redirection according to Section 20
-      const targetHash = ["admin", "super_admin", "faculty"].includes(res.role) ? "#admin" : "#home";
-      setTimeout(() => {
-        window.location.hash = targetHash;
+      const targetView = ["admin", "super_admin", "faculty"].includes(res.role) ? "admin" : "home";
+      setTimeout(async () => {
+        window.location.hash = `#${targetView}`;
+        this.activeView = targetView;
+        this.showView(targetView);
         if (btn) btn.disabled = false;
         if (spinner) spinner.classList.add("d-none");
         if (btnText) btnText.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> SIGN IN TO PORTAL';
-      }, 500);
+        try {
+          await this.checkAuth();
+        } catch (e) {}
+      }, 350);
 
     } catch (err) {
       if (btn) btn.disabled = false;
@@ -2623,6 +2640,16 @@ const App = {
     try {
       const res = await API.post("/api/auth/register", payload);
       API.setToken(res.access_token);
+      this.currentUser = {
+        user_id: res.user_id,
+        email: res.email,
+        role: res.role,
+        full_name: res.full_name,
+        is_verified: res.is_verified,
+        profile: { full_name: res.full_name }
+      };
+      API.setUser(this.currentUser);
+      this.updateAuthUI();
 
       if (res.is_verified) {
         this.showToast(`Registration verified automatically with VSCMS roster! Welcome, ${res.full_name}!`, "success");
@@ -2630,8 +2657,12 @@ const App = {
         this.showToast(`Registration submitted! Verification status: Pending Institutional Verification.`, "warning");
       }
 
-      await this.checkAuth();
       window.location.hash = "#home";
+      this.activeView = "home";
+      this.showView("home");
+      try {
+        await this.checkAuth();
+      } catch (e) {}
 
     } catch (err) {
       this.showRegAlert(err.message || "Registration failed. Please check your details.", "danger");
@@ -2656,12 +2687,26 @@ const App = {
     try {
       const res = await API.post("/api/auth/login", credentials);
       API.setToken(res.access_token);
+      this.currentUser = {
+        user_id: res.user_id,
+        email: res.email,
+        role: res.role,
+        full_name: res.full_name,
+        is_verified: res.is_verified,
+        profile: { full_name: res.full_name }
+      };
+      API.setUser(this.currentUser);
+      this.updateAuthUI();
       this.showAuthAlert(`Access Granted for ${res.full_name} (${role.toUpperCase()})! Redirecting...`, "success");
-      await this.checkAuth();
-      const targetHash = ["admin", "super_admin", "faculty"].includes(res.role) ? "#admin" : "#home";
-      setTimeout(() => {
-        window.location.hash = targetHash;
-      }, 400);
+      const targetView = ["admin", "super_admin", "faculty"].includes(res.role) ? "admin" : "home";
+      setTimeout(async () => {
+        window.location.hash = `#${targetView}`;
+        this.activeView = targetView;
+        this.showView(targetView);
+        try {
+          await this.checkAuth();
+        } catch (e) {}
+      }, 350);
     } catch (err) {
       this.showAuthAlert(err.message || "Demo login failed.", "danger");
     }

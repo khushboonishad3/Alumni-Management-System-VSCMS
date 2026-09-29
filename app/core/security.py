@@ -49,3 +49,22 @@ def decode_access_token(token: str) -> Optional[Dict[str, Any]]:
         return payload
     except (jwt.PyJWTError, Exception):
         return None
+
+def generate_captcha_token(code: str) -> str:
+    """Generates a cryptographically signed, stateless captcha token for serverless compatibility."""
+    expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    payload = {"c": code.strip().upper(), "exp": expire}
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+def verify_captcha_token(token: str, user_input: str) -> bool:
+    """Validates a stateless captcha token against user input."""
+    if not token or not user_input:
+        return False
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        expected = payload.get("c", "").strip().upper()
+        clean_input = user_input.strip().upper()
+        return hmac.compare_digest(expected, clean_input)
+    except (jwt.PyJWTError, Exception):
+        return False
+

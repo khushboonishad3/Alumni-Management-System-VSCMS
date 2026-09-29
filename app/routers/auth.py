@@ -16,7 +16,10 @@ from app.schemas.auth import (
     UserLogin, UserRegister, TokenResponse, CaptchaResponse,
     PasswordResetRequest, PasswordResetConfirm, ChangePasswordRequest
 )
-from app.core.security import hash_password, verify_password, create_access_token
+from app.core.security import (
+    hash_password, verify_password, create_access_token,
+    generate_captcha_token, verify_captcha_token
+)
 from app.core.dependencies import get_current_user
 from app.core.audit import log_audit_event
 
@@ -58,10 +61,10 @@ def get_captcha():
     clean_expired_captchas()
     chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"
     code = "".join(random.choices(chars, k=5))
-    captcha_id = str(uuid.uuid4())
+    captcha_id = generate_captcha_token(code)
     CAPTCHA_STORE[captcha_id] = {
         "code": code,
-        "expires_at": datetime.now(timezone.utc) + timedelta(minutes=10)
+        "expires_at": datetime.now(timezone.utc) + timedelta(minutes=15)
     }
     svg = generate_captcha_svg(code)
     return CaptchaResponse(captcha_id=captcha_id, captcha_svg=svg)
@@ -178,13 +181,18 @@ def login(creds: UserLogin, request: Request, response: Response, db: Session = 
     # 1. CAPTCHA verification (if captcha_id is supplied)
     if creds.captcha_id:
         clean_expired_captchas()
-        stored = CAPTCHA_STORE.get(creds.captcha_id)
-        if not stored or stored["code"].upper() != (creds.captcha_code or "").strip().upper():
+        is_valid = verify_captcha_token(creds.captcha_id, creds.captcha_code or "")
+        if not is_valid:
+            stored = CAPTCHA_STORE.get(creds.captcha_id)
+            if stored and stored["code"].upper() == (creds.captcha_code or "").strip().upper():
+                is_valid = True
+                CAPTCHA_STORE.pop(creds.captcha_id, None)
+
+        if not is_valid:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Captcha verification failed. Please try again."
             )
-        CAPTCHA_STORE.pop(creds.captcha_id, None)
 
     # 2. Search user by Email, or Roll No / Enrollment No
     clean_identifier = creds.email.strip().lower()
